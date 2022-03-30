@@ -88,11 +88,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { signup } from '../types/signupForm';
 
 
 @Component
 export default class LoginComponent extends Vue {
-  form = {
+  form: signup = {
     email: "",
     fName: "",
     lName: "",
@@ -102,7 +103,7 @@ export default class LoginComponent extends Vue {
   };
   show = true;
   // eslint-disable-next-line no-useless-escape
-  states = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
+  states: Array<string> = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
 
   submit(event: Event) {
     event.preventDefault();
