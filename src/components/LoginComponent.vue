@@ -88,27 +88,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import {
-  BForm,
-  BCard,
-  BFormGroup,
-  BButton,
-  BFormInput,
-  BFormInvalidFeedback,
-  BFormValidFeedback,
-} from "bootstrap-vue";
 
-@Component({
-  components: {
-    BForm,
-    BCard,
-    BFormGroup,
-    BButton,
-    BFormInput,
-    BFormValidFeedback,
-    BFormInvalidFeedback,
-  },
-})
+
+@Component
 export default class LoginComponent extends Vue {
   form = {
     email: "",
