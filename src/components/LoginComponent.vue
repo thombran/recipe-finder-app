@@ -2,6 +2,18 @@
 <template>
   <div id="login">
     <form id="loginForm" @submit.prevent="submit">
+      <div class="form-row email-row">
+        <div class="col-md-10 mb-3">
+          <label for="emailInput">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="emailInput"
+            v-model="form.email"
+            required
+            />
+          </div>
+        </div>
       <div class="form-row">
         <div class="col-md-6 mb-3">
           <label for="fNameInput">First name</label>
@@ -45,7 +57,7 @@
         <div class="col-md-3 mb-3">
           <label for="zipInput">Zip</label>
           <input
-            type="text"
+            type="number"
             class="form-control"
             id="zipInput"
             v-model="form.zip"
@@ -68,7 +80,7 @@
           </label>
         </div>
       </div>
-      <button class="btn btn-success"  type="submit">Login</button>
+      <button class="btn btn-success"  type="submit">Sign Up</button>
       <button class="btn btn-danger" type="button" onclick="reset()">Reset</button>
     </form>
   </div>
@@ -156,5 +168,8 @@ export default class LoginComponent extends Vue {
 }
 .btn {
   margin-bottom: 5%;
+}
+.email-row {
+  justify-content: center;
 }
 </style>
