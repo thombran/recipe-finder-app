@@ -1,22 +1,14 @@
 <template>
   <div id="app">
-    <LoginComponent/>
+    <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import  AppFooter  from './components/AppFooter.vue';
-import AppHeader from './components/AppHeader.vue';
-import LoginComponent from './components/LoginComponent.vue';
 
-@Component({
-  components: {
-    AppHeader,
-    AppFooter,
-    LoginComponent
-  },
-})
+
+@Component
 export default class App extends Vue {}
 </script>
 
@@ -27,7 +19,5 @@ export default class App extends Vue {}
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-image: url('./assets/recipe-background.jpg');
-  background-size: 100%;
 }
 </style>

@@ -92,7 +92,7 @@ import { signup } from '../types/signupForm';
 
 
 @Component
-export default class LoginComponent extends Vue {
+export default class SignupView extends Vue {
   form: signup = {
     email: "",
     fName: "",
@@ -128,7 +128,14 @@ export default class LoginComponent extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
+#app {
+  background-image: url('../assets/recipe-background.jpg');
+ -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 #login {
   display: flex;
   justify-content: left;
