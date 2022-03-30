@@ -1,8 +1,13 @@
 /* eslint-disable no-useless-escape */
 <template>
   <div id="login">
+    <div id="appLogo">
+      <img src="../assets/chefHat.svg" id="logo" alt="Chef's hat logo">
+      <p><b>Recipes for Me</b></p>
+    </div>
     <form id="loginForm" @submit.prevent="submit">
       <div class="form-row email-row">
+        <label><b>Create a new account</b></label>
         <div class="col-md-10 mb-3">
           <label for="emailInput">Email</label>
           <input
@@ -161,5 +166,20 @@ export default class SignupView extends Vue {
 }
 .email-row {
   justify-content: center;
+}
+#appLogo {
+  position: absolute;
+  top: 5em;
+  left: 50em;
+  width: 250px;
+  height: auto;
+}
+p:first-of-type {
+  margin-top: 1em;
+  font-size: 2em;
+  color: white;
+}
+p:nth-of-type(1) {
+  border-bottom: 1px solid black;
 }
 </style>
