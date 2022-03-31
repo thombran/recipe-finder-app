@@ -137,7 +137,7 @@ export default class SignupView extends Vue {
     // Reset our form values
     this.form.email = "";
     this.form.pass = "";
-    this.form.verifyPass = "",
+    this.form.verifyPass = "";
     this.form.fName = "";
     this.form.lName = "";
     this.form.agree = false;
