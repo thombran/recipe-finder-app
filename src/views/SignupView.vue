@@ -92,13 +92,9 @@ export default class SignupView extends Vue {
     pass: "",
     fName: "",
     lName: "",
-    state: "...",
-    zip: "",
     agree: false
   };
   show = true;
-  // eslint-disable-next-line no-useless-escape
-  states: Array<string> = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
 
   submit(event: Event) {
     event.preventDefault();
@@ -112,8 +108,6 @@ export default class SignupView extends Vue {
     this.form.pass = "";
     this.form.fName = "";
     this.form.lName = "";
-    this.form.state = "";
-    this.form.zip = "";
     this.form.agree = false
     // Trick to reset/clear native browser form validation state
     this.show = false;

@@ -3,7 +3,5 @@ export type signup = {
     pass: string,
     fName: string,
     lName: string,
-    state: string,
-    zip: string,
     agree: boolean
 }
