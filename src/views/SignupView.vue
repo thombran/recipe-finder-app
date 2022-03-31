@@ -82,7 +82,7 @@
       </div>
       <button class="btn btn-success main" type="submit">Sign Up</button>
       <button class="btn btn-danger main" type="button" onclick="reset()">
-        Reset
+        Clear
       </button>
       <button class="btn btn-primary main" type="button">
         Already have an account?
