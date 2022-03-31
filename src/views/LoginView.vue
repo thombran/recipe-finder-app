@@ -6,7 +6,7 @@
     </div>
     <form id="loginForm" @submit.prevent="submit">
       <div class="form-row email-row">
-        <label><b>Create a new account</b></label>
+        <label><b>Login to your account</b></label>
         <div class="col-md-10 mb-3">
           <label for="emailInput">Email</label>
           <input
@@ -30,61 +30,12 @@
           />
         </div>
       </div>
-      <div class="form-row pass-valid-row">
-        <div class="col-md-10 mb-3">
-          <label for="passInput">Verify Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="passVerifyInput"
-            v-model="form.verifyPass"
-            required
-          />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-6 mb-3">
-          <label for="fNameInput">First name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="fNameInput"
-            v-model="form.fName"
-            required
-          />
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="lNameInput">Last name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="lNameInput"
-            v-model="form.lName"
-            required
-          />
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            id="agreeCheck"
-            v-model="form.agree"
-            required
-          />
-          <label class="form-check-label" for="agreeCheck">
-            Agree to terms and conditions
-          </label>
-        </div>
-      </div>
-      <button class="btn btn-success main" type="submit">Sign Up</button>
+      <button class="btn btn-success main" type="submit">Login</button>
       <button class="btn btn-danger main" type="button" onclick="reset()">
         Clear
       </button>
-      <button class="btn btn-primary main" type="button" @click="goToLogin">
-        Already have an account?
+      <button class="btn btn-primary main" type="button" @click="goToSignup">
+        Don't have an account?
       </button>
       <hr />
       <div>
@@ -108,27 +59,19 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { signup } from "../types/signupForm";
+import { login } from "../types/loginForm";
 
 @Component
-export default class SignupView extends Vue {
-  form: signup = {
+export default class LoginView extends Vue {
+  form: login= {
     email: "",
     pass: "",
-    verifyPass: "",
-    fName: "",
-    lName: "",
-    agree: false,
   };
   show = true;
 
   submit(event: Event) {
     event.preventDefault();
-    if (this.form.pass === this.form.verifyPass) {
-      alert(JSON.stringify(this.form));
-    } else {
-      alert("Password does not match, try typing it again.");
-    }
+    alert(JSON.stringify(this.form));
   }
 
   reset(event: Event) {
@@ -136,10 +79,6 @@ export default class SignupView extends Vue {
     // Reset our form values
     this.form.email = "";
     this.form.pass = "";
-    this.form.verifyPass = "";
-    this.form.fName = "";
-    this.form.lName = "";
-    this.form.agree = false;
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {
@@ -147,9 +86,9 @@ export default class SignupView extends Vue {
     });
   }
 
-  goToLogin(event: Event) {
-    event.preventDefault();
-    this.$router.replace({ path: "/login" })
+  goToSignup(event: Event) {
+      event.preventDefault();
+      this.$router.replace({ path: "/" });
   }
 }
 </script>
@@ -184,8 +123,8 @@ export default class SignupView extends Vue {
 }
 #appLogo {
   position: relative;
-  top: -28em;
-  left: 24.5em;
+  top: -23em;
+  left: 22.5em;
   width: 250px;
   height: auto;
 }
