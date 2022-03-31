@@ -4,7 +4,7 @@
       <img src="../assets/chefHat.svg" id="logo" alt="Chef's hat logo" />
       <p><b>Recipes for Me</b></p>
     </div>
-    <form id="loginForm" @submit.prevent="submit">
+    <form id="loginForm" @submit.prevent="createAccount">
       <div class="form-row email-row">
         <label><b>Create a new account</b></label>
         <div class="col-md-10 mb-3">
@@ -42,40 +42,17 @@
           />
         </div>
       </div>
-      <div class="form-row">
-        <div class="col-md-6 mb-3">
-          <label for="fNameInput">First name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="fNameInput"
-            v-model="form.fName"
-            required
-          />
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="lNameInput">Last name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="lNameInput"
-            v-model="form.lName"
-            required
-          />
-        </div>
-      </div>
       <div class="form-group">
         <div class="form-check">
           <input
             class="form-check-input"
             type="checkbox"
             value=""
-            id="agreeCheck"
-            v-model="form.agree"
-            required
+            id="verifyCheck"
+            v-model="form.verify"
           />
-          <label class="form-check-label" for="agreeCheck">
-            Agree to terms and conditions
+          <label class="form-check-label" for="verifyCheck">
+            Send Verification email?
           </label>
         </div>
       </div>
@@ -92,6 +69,7 @@
           class="btn btn-outline-dark google"
           role="button"
           style="text-transform: none"
+          @click="loginWithGoogle"
         >
           <img
             width="20px"
@@ -109,6 +87,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { signup } from "../types/signupForm";
+import {
+  getAuth,
+  Auth,
+  UserCredential,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup
+} from "firebase/auth";
 
 @Component
 export default class SignupView extends Vue {
@@ -116,11 +104,14 @@ export default class SignupView extends Vue {
     email: "",
     pass: "",
     verifyPass: "",
-    fName: "",
-    lName: "",
-    agree: false,
+    verify: false,
   };
   show = true;
+  auth: Auth | null = null;
+
+  mounted(): void {
+    this.auth = getAuth();
+  }
 
   submit(event: Event) {
     event.preventDefault();
@@ -137,9 +128,7 @@ export default class SignupView extends Vue {
     this.form.email = "";
     this.form.pass = "";
     this.form.verifyPass = "";
-    this.form.fName = "";
-    this.form.lName = "";
-    this.form.agree = false;
+    this.form.verify = false;
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {
@@ -149,7 +138,48 @@ export default class SignupView extends Vue {
 
   goToLogin(event: Event) {
     event.preventDefault();
-    this.$router.replace({ path: "/login" })
+    this.$router.replace({ path: "/login" });
+  }
+
+  createAccount(event: Event): void {
+    event.preventDefault();
+    if (this.form.pass === this.form.verifyPass) {
+      createUserWithEmailAndPassword(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.auth!,
+        this.form.email,
+        this.form.pass
+      )
+        .then(async (cr: UserCredential) => {
+          if (this.form.verify) {
+            await sendEmailVerification(cr.user);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            await signOut(this.auth!);
+            alert(`An email verification has been sent to ${cr.user.email}`);
+          } else {
+            alert(`New account created with UID ${cr.user.uid}`);
+          }
+        })
+        .catch((err: Error) => {
+          alert(`Unable to create account: ${err}`);
+        });
+    } else {
+      alert("Password does not match, try typing it again.");
+    }
+  }
+
+  loginWithGoogle(): void {
+    const provider = new GoogleAuthProvider();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    signInWithPopup(this.auth!, provider)
+    .then(() => {
+      alert("Login successful!");
+      //Add code to redirect to homepage when made
+    })
+    .catch((err: Error) => {
+      alert(`Unable to login with Google: ${err}`);
+      //Add better popup UI
+    })
   }
 }
 </script>
@@ -185,7 +215,7 @@ export default class SignupView extends Vue {
 #appLogo {
   position: relative;
   top: -28em;
-  left: 24.5em;
+  left: 23em;
   width: 250px;
   height: auto;
 }
@@ -199,8 +229,5 @@ p:nth-of-type(1) {
 }
 .main {
   margin-right: 1em;
-}
-button:first-of-type {
-  margin-left: 5%;
 }
 </style>

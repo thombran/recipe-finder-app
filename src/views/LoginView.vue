@@ -30,19 +30,23 @@
           />
         </div>
       </div>
-      <button class="btn btn-success main" type="submit">Login</button>
+      <button class="btn btn-success main" type="submit" @click="loginWithEmail">Login</button>
       <button class="btn btn-danger main" type="button" onclick="reset()">
         Clear
       </button>
       <button class="btn btn-primary main" type="button" @click="goToSignup">
         Don't have an account?
       </button>
+      <button class="btn btn-warning main" type="button" @click="resetPassword">
+        Reset Password
+      </button>      
       <hr />
       <div>
         <a
           class="btn btn-outline-dark google"
           role="button"
           style="text-transform: none"
+          @click="loginWithGoogle"
         >
           <img
             width="20px"
@@ -60,6 +64,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { login } from "../types/loginForm";
+import {
+  getAuth,
+  Auth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  UserCredential,
+  signInWithEmailAndPassword,
+  signOut,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 
 @Component
 export default class LoginView extends Vue {
@@ -68,13 +82,14 @@ export default class LoginView extends Vue {
     pass: "",
   };
   show = true;
+  auth: Auth | null = null;
 
-  submit(event: Event) {
+  submit(event: Event): void {
     event.preventDefault();
     alert(JSON.stringify(this.form));
   }
 
-  reset(event: Event) {
+  reset(event: Event): void {
     event.preventDefault();
     // Reset our form values
     this.form.email = "";
@@ -86,9 +101,60 @@ export default class LoginView extends Vue {
     });
   }
 
-  goToSignup(event: Event) {
+  goToSignup(event: Event): void {
       event.preventDefault();
       this.$router.replace({ path: "/" });
+  }
+
+  mounted(): void {
+    this.auth = getAuth();
+  }
+
+  loginWithEmail(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    signInWithEmailAndPassword(this.auth!, this.form.email, this.form.pass)
+    .then(async (cr: UserCredential) => {
+      if (cr.user.emailVerified) {
+        alert("Login successful");
+        //Add logic to switch to homepage here
+      } else {
+        alert("You need to verify your email first!");
+        //Add better popup UI
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await signOut(this.auth!);
+      }
+    })
+    .catch((err: Error) => {
+      alert(`Unable to login: ${err}`);
+      //Add better popup UI
+    });
+  }
+
+  loginWithGoogle(): void {
+    const provider = new GoogleAuthProvider();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    signInWithPopup(this.auth!, provider)
+    .then(() => {
+      alert("Login successful!");
+      //Add code to redirect to homepage when made
+    })
+    .catch((err: Error) => {
+      alert(`Unable to login with Google: ${err}`);
+      //Add better popup UI
+    })
+  }
+
+  resetPassword(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    sendPasswordResetEmail(this.auth!, this.form.email)
+    .then(() => {
+      alert(`A password reset link has been sent to ${this.form.email}`);
+      //Implement better popup UI
+    })
+    .catch((err: Error) => {
+      alert(`Unable to reset password: ${err}`);
+      //Implement better popup UI
+    })
   }
 }
 </script>
@@ -124,7 +190,7 @@ export default class LoginView extends Vue {
 #appLogo {
   position: relative;
   top: -23em;
-  left: 22.5em;
+  left: 27em;
   width: 250px;
   height: auto;
 }
@@ -139,7 +205,7 @@ p:nth-of-type(1) {
 .main {
   margin-right: 1em;
 }
-button:first-of-type {
-  margin-left: 5%;
+.btn:nth-child(3) {
+  margin-left: 2%;
 }
 </style>

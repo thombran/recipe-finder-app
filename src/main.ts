@@ -12,14 +12,14 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 Vue.config.productionTip = false;
 const app = initializeApp(firebaseConfig);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const analytics = getAnalytics(app);
 
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 new Vue({
   router,
   render: (h) => h(App),
 }).$mount('#app');
-
-Vue.use(BootstrapVue);
-Vue.use(IconsPlugin);
 
