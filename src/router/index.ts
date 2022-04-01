@@ -36,7 +36,7 @@ router.beforeEach((to, _, next) => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (to.name !== "signup" && to.name !== "login" && !user) {
-        next({ name: "signup" });
+        next({ name: "login" });
       } else {
           next();
       }

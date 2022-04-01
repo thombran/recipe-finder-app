@@ -65,7 +65,7 @@
             </v-list-item-icon>
             <v-list-item-title>Search</v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="logout">
             <v-list-item-icon>
               <v-icon>mdi-logout</v-icon>
             </v-list-item-icon>
@@ -78,10 +78,14 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-
+import { Auth, getAuth } from "firebase/auth";
 
 @Component
 export default class NavBar extends Vue {
-    
+
+    async logout(): Promise<void> {
+    const auth: Auth | null = getAuth();
+    await auth.signOut().then(() => { this.$router.replace({ path: "/login" })});
+  }
 }
 </script>

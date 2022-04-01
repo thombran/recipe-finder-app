@@ -1,5 +1,15 @@
 <template>
   <div id="login">
+    <div>
+    <v-alert
+      v-model="alert"
+      dismissible
+      id="alertBox"
+      color="#ffe6b8"
+    >
+      <h6 v-text="alertText"></h6>
+    </v-alert>
+  </div>
     <div id="appLogo">
       <img src="../assets/chefHat.svg" id="logo" alt="Chef's hat logo" />
       <p><b>Recipes for Me</b></p>
@@ -50,10 +60,12 @@
           </v-btn>
         </template>
         <v-card>
-          <v-card-title class="text-h5">
-            Reset Password?
-          </v-card-title>
-            <v-text-field label="Email" v-model="form.emailReset" class="dialogText"></v-text-field>
+          <v-card-title class="text-h5"> Reset Password? </v-card-title>
+          <v-text-field
+            label="Email"
+            v-model="form.emailReset"
+            class="dialogText"
+          ></v-text-field>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="green darken-1" text @click="dialog = false">
@@ -105,15 +117,16 @@ export default class LoginView extends Vue {
   form: login = {
     email: "",
     pass: "",
-    emailReset: ""
+    emailReset: "",
   };
   show = true;
   auth: Auth | null = null;
   dialog = false;
+  alert = false;
+  alertText = "";
 
   submit(event: Event): void {
     event.preventDefault();
-    alert(JSON.stringify(this.form));
   }
 
   reset(event: Event): void {
@@ -145,14 +158,15 @@ export default class LoginView extends Vue {
         if (cr.user.emailVerified) {
           this.$router.push({ path: "/home" });
         } else {
-          alert("You need to verify your email first!");
-          //Add better popup UI
+          this.alertText = "Please verify your email before logging in";
+          this.alert = true;
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           await signOut(this.auth!);
         }
       })
       .catch((err: Error) => {
-        alert(`Unable to login: ${err}`);
+          this.alertText = `Error logging in ${err}`;
+          this.alert = true;
         //Add better popup UI
       });
   }
@@ -165,8 +179,8 @@ export default class LoginView extends Vue {
         this.$router.push({ path: "/home" });
       })
       .catch((err: Error) => {
-        alert(`Unable to login with Google: ${err}`);
-        //Add better popup UI
+        this.alertText = `Unable to login with Google: ${err}`;
+        this.alert = true;
       });
   }
 
@@ -175,12 +189,12 @@ export default class LoginView extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     sendPasswordResetEmail(this.auth!, this.form.emailReset)
       .then(() => {
-        alert(`A password reset link has been sent to ${this.form.emailReset}`);
-        //Implement better popup UI
+        this.alertText = `A password reset link has been sent to ${this.form.emailReset}`;
+        this.alert = true;
       })
       .catch((err: Error) => {
-        alert(`Unable to reset password: ${err}`);
-        //Implement better popup UI
+        this.alertText = `Unable to reset password: ${err}`;
+        this.alert = true;
       });
   }
 }
@@ -242,5 +256,12 @@ p:nth-of-type(1) {
 }
 .dialogText {
   padding: 1em;
+}
+.v-alert {
+  position: absolute;
+  left: 40vw;
+  width: 25vw;
+  height: 50px;
+  top: 0;
 }
 </style>
