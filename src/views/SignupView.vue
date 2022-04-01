@@ -199,7 +199,7 @@ export default class SignupView extends Vue {
 }
 #appLogo {
   position: relative;
-  top: -28%;
+  top: -30%;
   left: 29%;
   width: 250px;
   height: auto;

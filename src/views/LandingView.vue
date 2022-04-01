@@ -51,8 +51,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
+
 @Component
-export default class LandingView extends Vue {}
+export default class LandingView extends Vue {
+    
+}
 </script>
 
 <style scoped>
