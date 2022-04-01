@@ -30,16 +30,41 @@
           />
         </div>
       </div>
-      <button class="btn btn-success main" type="submit" @click="loginWithEmail">Login</button>
+      <button
+        class="btn btn-success main"
+        type="submit"
+        @click="loginWithEmail"
+      >
+        Login
+      </button>
       <button class="btn btn-danger main" type="button" onclick="reset()">
         Clear
       </button>
       <button class="btn btn-primary main" type="button" @click="goToSignup">
         Don't have an account?
       </button>
-      <button class="btn btn-warning main" type="button" @click="resetPassword">
-        Reset Password
-      </button>      
+      <v-dialog v-model="dialog" persistent max-width="350">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="warning" dark v-bind="attrs" v-on="on">
+            Reset Password
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title class="text-h5">
+            Reset Password?
+          </v-card-title>
+            <v-text-field label="Email" v-model="form.emailReset"></v-text-field>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="dialog = false">
+              Close
+            </v-btn>
+            <v-btn color="green darken-1" text @click="resetPassword">
+              Reset
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <hr />
       <div>
         <a
@@ -77,12 +102,14 @@ import {
 
 @Component
 export default class LoginView extends Vue {
-  form: login= {
+  form: login = {
     email: "",
     pass: "",
+    emailReset: ""
   };
   show = true;
   auth: Auth | null = null;
+  dialog = false;
 
   submit(event: Event): void {
     event.preventDefault();
@@ -94,6 +121,7 @@ export default class LoginView extends Vue {
     // Reset our form values
     this.form.email = "";
     this.form.pass = "";
+    this.form.emailReset = "",
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {
@@ -102,8 +130,8 @@ export default class LoginView extends Vue {
   }
 
   goToSignup(event: Event): void {
-      event.preventDefault();
-      this.$router.replace({ path: "/" });
+    event.preventDefault();
+    this.$router.replace({ path: "/" });
   }
 
   mounted(): void {
@@ -113,48 +141,49 @@ export default class LoginView extends Vue {
   loginWithEmail(): void {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     signInWithEmailAndPassword(this.auth!, this.form.email, this.form.pass)
-    .then(async (cr: UserCredential) => {
-      if (cr.user.emailVerified) {
-        alert("Login successful");
-        //Add logic to switch to homepage here
-      } else {
-        alert("You need to verify your email first!");
+      .then(async (cr: UserCredential) => {
+        if (cr.user.emailVerified) {
+          alert("Login successful");
+          //Add logic to switch to homepage here
+        } else {
+          alert("You need to verify your email first!");
+          //Add better popup UI
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          await signOut(this.auth!);
+        }
+      })
+      .catch((err: Error) => {
+        alert(`Unable to login: ${err}`);
         //Add better popup UI
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await signOut(this.auth!);
-      }
-    })
-    .catch((err: Error) => {
-      alert(`Unable to login: ${err}`);
-      //Add better popup UI
-    });
+      });
   }
 
   loginWithGoogle(): void {
     const provider = new GoogleAuthProvider();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     signInWithPopup(this.auth!, provider)
-    .then(() => {
-      alert("Login successful!");
-      //Add code to redirect to homepage when made
-    })
-    .catch((err: Error) => {
-      alert(`Unable to login with Google: ${err}`);
-      //Add better popup UI
-    })
+      .then(() => {
+        alert("Login successful!");
+        //Add code to redirect to homepage when made
+      })
+      .catch((err: Error) => {
+        alert(`Unable to login with Google: ${err}`);
+        //Add better popup UI
+      });
   }
 
   resetPassword(): void {
+    this.dialog = false;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    sendPasswordResetEmail(this.auth!, this.form.email)
-    .then(() => {
-      alert(`A password reset link has been sent to ${this.form.email}`);
-      //Implement better popup UI
-    })
-    .catch((err: Error) => {
-      alert(`Unable to reset password: ${err}`);
-      //Implement better popup UI
-    })
+    sendPasswordResetEmail(this.auth!, this.form.emailReset)
+      .then(() => {
+        alert(`A password reset link has been sent to ${this.form.emailReset}`);
+        //Implement better popup UI
+      })
+      .catch((err: Error) => {
+        alert(`Unable to reset password: ${err}`);
+        //Implement better popup UI
+      });
   }
 }
 </script>
