@@ -53,7 +53,7 @@
           <v-card-title class="text-h5">
             Reset Password?
           </v-card-title>
-            <v-text-field label="Email" v-model="form.emailReset"></v-text-field>
+            <v-text-field label="Email" v-model="form.emailReset" class="dialogText"></v-text-field>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="green darken-1" text @click="dialog = false">
@@ -236,5 +236,8 @@ p:nth-of-type(1) {
 }
 .btn:nth-child(3) {
   margin-left: 2%;
+}
+.dialogText {
+  padding: 1em;
 }
 </style>
