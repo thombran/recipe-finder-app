@@ -121,7 +121,7 @@ export default class LoginView extends Vue {
     // Reset our form values
     this.form.email = "";
     this.form.pass = "";
-    this.form.emailReset = "",
+    this.form.emailReset = "";
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {
