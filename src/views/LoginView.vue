@@ -143,8 +143,7 @@ export default class LoginView extends Vue {
     signInWithEmailAndPassword(this.auth!, this.form.email, this.form.pass)
       .then(async (cr: UserCredential) => {
         if (cr.user.emailVerified) {
-          alert("Login successful");
-          //Add logic to switch to homepage here
+          this.$router.push({ path: "/home" });
         } else {
           alert("You need to verify your email first!");
           //Add better popup UI
@@ -163,8 +162,7 @@ export default class LoginView extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     signInWithPopup(this.auth!, provider)
       .then(() => {
-        alert("Login successful!");
-        //Add code to redirect to homepage when made
+        this.$router.push({ path: "/home" });
       })
       .catch((err: Error) => {
         alert(`Unable to login with Google: ${err}`);
@@ -195,13 +193,18 @@ export default class LoginView extends Vue {
   align-items: center;
   text-align: center;
   min-height: 100vh;
-  margin-left: 18%;
   color: black;
+  background-image: url("../assets/recipe-background.jpg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 #loginForm {
   background-color: white;
   border: 3px solid black;
   margin-top: 3%;
+  margin-left: 18%;
   padding-left: 1%;
   padding-right: 1%;
 }
@@ -218,8 +221,8 @@ export default class LoginView extends Vue {
 }
 #appLogo {
   position: relative;
-  top: -23em;
-  left: 27em;
+  top: -28%;
+  left: 31%;
   width: 250px;
   height: auto;
 }

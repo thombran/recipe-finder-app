@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter, { RouteConfig } from "vue-router";
 import SignupView from "../views/SignupView.vue";
 import LoginView from "../views/LoginView.vue";
+import LandingView from "../views/LandingView.vue";
 
 Vue.use(VueRouter);
 
@@ -16,6 +17,11 @@ const routes: Array<RouteConfig> = [
         name: "login",
         component: LoginView,
     },
+    {
+        path: "/home",
+        name: "home",
+        component: LandingView,
+    }
 ];
 
 const router = new VueRouter({

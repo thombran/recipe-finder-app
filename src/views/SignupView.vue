@@ -139,6 +139,7 @@ export default class SignupView extends Vue {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             await signOut(this.auth!);
             alert(`An email verification has been sent to ${cr.user.email}`);
+            this.$router.push({ path: "/login" });
         })
         .catch((err: Error) => {
           alert(`Unable to create account: ${err}`);
@@ -153,8 +154,7 @@ export default class SignupView extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     signInWithPopup(this.auth!, provider)
     .then(() => {
-      alert("Login successful!");
-      //Add code to redirect to homepage when made
+      this.$router.push({ path: "/home" });
     })
     .catch((err: Error) => {
       alert(`Unable to login with Google: ${err}`);
@@ -171,13 +171,18 @@ export default class SignupView extends Vue {
   align-items: center;
   text-align: center;
   min-height: 100vh;
-  margin-left: 18%;
   color: black;
+  background-image: url("../assets/recipe-background.jpg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 #loginForm {
   background-color: white;
   border: 3px solid black;
   margin-top: 3%;
+  margin-left: 18%;
   padding-left: 1%;
   padding-right: 1%;
 }
@@ -194,8 +199,8 @@ export default class SignupView extends Vue {
 }
 #appLogo {
   position: relative;
-  top: -25em;
-  left: 23em;
+  top: -28%;
+  left: 29%;
   width: 250px;
   height: auto;
 }
