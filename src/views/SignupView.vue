@@ -42,20 +42,6 @@
           />
         </div>
       </div>
-      <div class="form-group">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            value=""
-            id="verifyCheck"
-            v-model="form.verify"
-          />
-          <label class="form-check-label" for="verifyCheck">
-            Send Verification email?
-          </label>
-        </div>
-      </div>
       <button class="btn btn-success main" type="submit">Sign Up</button>
       <button class="btn btn-danger main" type="button" onclick="reset()">
         Clear
@@ -104,7 +90,6 @@ export default class SignupView extends Vue {
     email: "",
     pass: "",
     verifyPass: "",
-    verify: false,
   };
   show = true;
   auth: Auth | null = null;
@@ -128,7 +113,6 @@ export default class SignupView extends Vue {
     this.form.email = "";
     this.form.pass = "";
     this.form.verifyPass = "";
-    this.form.verify = false;
     // Trick to reset/clear native browser form validation state
     this.show = false;
     this.$nextTick(() => {
@@ -151,14 +135,10 @@ export default class SignupView extends Vue {
         this.form.pass
       )
         .then(async (cr: UserCredential) => {
-          if (this.form.verify) {
             await sendEmailVerification(cr.user);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             await signOut(this.auth!);
             alert(`An email verification has been sent to ${cr.user.email}`);
-          } else {
-            alert(`New account created with UID ${cr.user.uid}`);
-          }
         })
         .catch((err: Error) => {
           alert(`Unable to create account: ${err}`);
@@ -214,7 +194,7 @@ export default class SignupView extends Vue {
 }
 #appLogo {
   position: relative;
-  top: -28em;
+  top: -25em;
   left: 23em;
   width: 250px;
   height: auto;
