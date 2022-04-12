@@ -1,100 +1,95 @@
 <template>
   <div id="login">
     <div>
-    <v-alert
-      v-model="alert"
-      dismissible
-      id="alertBox"
-      color="#ffe6b8"
-    >
-      <h6 v-text="alertText"></h6>
-    </v-alert>
-  </div>
-    <div id="appLogo">
+      <v-alert v-model="alert" dismissible id="alertBox" color="#ffe6b8">
+        <h6 v-text="alertText"></h6>
+      </v-alert>
+    </div>
+    <div id="loginBox">
       <img src="../assets/chefHat.svg" id="logo" alt="Chef's hat logo" />
       <p><b>Recipes for Me</b></p>
-    </div>
-    <form id="loginForm" @submit.prevent="submit">
-      <div class="form-row email-row">
-        <label><b>Login to your account</b></label>
-        <div class="col-md-10 mb-3">
-          <label for="emailInput">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            id="emailInput"
-            v-model="form.email"
-            required
-          />
+      <form id="loginForm" @submit.prevent="submit">
+        <div class="form-row email-row">
+          <label><b>Login to your account</b></label>
+          <div class="col-md-10 mb-3">
+            <label for="emailInput">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="emailInput"
+              v-model="form.email"
+              required
+            />
+          </div>
         </div>
-      </div>
-      <div class="form-row pass-row">
-        <div class="col-md-10 mb-3">
-          <label for="passInput">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="passInput"
-            v-model="form.pass"
-            required
-          />
+        <div class="form-row pass-row">
+          <div class="col-md-10 mb-3">
+            <label for="passInput">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="passInput"
+              v-model="form.pass"
+              required
+            />
+          </div>
         </div>
-      </div>
-      <button
-        class="btn btn-success main"
-        type="submit"
-        @click="loginWithEmail"
-      >
-        Login
-      </button>
-      <button class="btn btn-danger main" type="button" onclick="reset()">
-        Clear
-      </button>
-      <button class="btn btn-primary main" type="button" @click="goToSignup">
-        Don't have an account?
-      </button>
-      <v-dialog v-model="dialog" persistent max-width="350">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn color="warning" dark v-bind="attrs" v-on="on">
-            Reset Password
-          </v-btn>
-        </template>
-        <v-card>
-          <v-card-title class="text-h5"> Reset Password? </v-card-title>
-          <v-text-field
-            label="Email"
-            v-model="form.emailReset"
-            class="dialogText"
-          ></v-text-field>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialog = false">
-              Close
-            </v-btn>
-            <v-btn color="green darken-1" text @click="resetPassword">
-              Reset
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <hr />
-      <div>
-        <a
-          class="btn btn-outline-dark google"
-          role="button"
-          style="text-transform: none"
-          @click="loginWithGoogle"
+        <button
+          class="btn btn-success main"
+          type="submit"
+          @click="loginWithEmail"
         >
-          <img
-            width="20px"
-            style="margin-bottom: 3px; margin-right: 5px"
-            alt="Google sign-in"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
-          />
-          Login with Google
-        </a>
-      </div>
-    </form>
+          Login
+        </button>
+        <button class="btn btn-danger main" type="button" onclick="reset()">
+          Clear
+        </button>
+        <button class="btn btn-primary main" type="button" @click="goToSignup">
+          Don't have an account?
+        </button>
+        <v-dialog v-model="dialog" persistent max-width="350">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="warning" dark v-bind="attrs" v-on="on">
+              Reset Password
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="text-h5"> Reset Password? </v-card-title>
+            <v-text-field
+              label="Email"
+              v-model="form.emailReset"
+              class="dialogText"
+            ></v-text-field>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="dialog = false">
+                Close
+              </v-btn>
+              <v-btn color="green darken-1" text @click="resetPassword">
+                Reset
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <hr />
+        <div>
+          <a
+            class="btn btn-outline-dark google"
+            role="button"
+            style="text-transform: none"
+            @click="loginWithGoogle"
+          >
+            <img
+              width="20px"
+              style="margin-bottom: 3px; margin-right: 5px"
+              alt="Google sign-in"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+            />
+            Login with Google
+          </a>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -165,8 +160,8 @@ export default class LoginView extends Vue {
         }
       })
       .catch((err: Error) => {
-          this.alertText = `Error logging in ${err}`;
-          this.alert = true;
+        this.alertText = `Error logging in ${err}`;
+        this.alert = true;
         //Add better popup UI
       });
   }
@@ -201,13 +196,18 @@ export default class LoginView extends Vue {
 </script>
 
 <style scoped>
-#login {
+#loginBox{
   display: flex;
+  flex-direction: column;
   justify-content: left;
   align-items: center;
   text-align: center;
   min-height: 100vh;
   color: black;
+  margin-right: 40%;
+  margin-top: 2%;
+}
+#login {
   background-image: url("../assets/recipe-background.jpg");
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -217,10 +217,6 @@ export default class LoginView extends Vue {
 #loginForm {
   background-color: white;
   border: 3px solid black;
-  margin-top: 3%;
-  margin-left: 18%;
-  padding-left: 1%;
-  padding-right: 1%;
 }
 .form-row:first-of-type {
   margin-top: 5%;
@@ -233,12 +229,9 @@ export default class LoginView extends Vue {
 .pass-valid-row {
   justify-content: center;
 }
-#appLogo {
-  position: relative;
-  top: -28%;
-  left: 31%;
-  width: 250px;
-  height: auto;
+#logo{
+  height: 20%;
+  width: 20%;
 }
 p:first-of-type {
   margin-top: 1em;
