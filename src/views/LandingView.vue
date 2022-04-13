@@ -78,37 +78,40 @@
           </v-container>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row id="switches">
         <v-col>
-          <v-checkbox
+          <v-switch
             v-model="search.instructions"
             :label="'Want Instructions?'"
             color="success"
-            class="check"
-          ></v-checkbox>
+            class="switch"
+          ></v-switch>
         </v-col>
         <v-col>
-          <v-checkbox
+          <v-switch
             v-model="search.recipeInfo"
             :label="'More information about the recipes?'"
             color="success"
-            class="check"
-          ></v-checkbox>
+            class="switch"
+          ></v-switch>
         </v-col>
         <v-col>
-          <v-checkbox
+          <v-switch
             v-model="search.nutrition"
             :label="'Want nutrition information?'"
             color="success"
-            class="check"
-          ></v-checkbox>
+            class="switch"
+          ></v-switch>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <v-btn block color="success" elevation="2" rounded
+          <v-btn block color="success" elevation="2" rounded @click="randomSearch"
             >Feeling Lucky?</v-btn
           >
+        </v-col>
+        <v-col>
+          <b-btn @click="sendRequest" id="searchBtn">Search</b-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -119,6 +122,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue";
 import { cuisineTypes, dietTypes, mealTypes } from "../types";
+import axios, { AxiosResponse } from "axios";
+import { API_KEY } from "../secrets";
 
 @Component({
   components: {
@@ -138,6 +143,39 @@ export default class LandingView extends Vue {
   cuisineTypes = cuisineTypes;
   dietTypes = dietTypes;
   mealTypes = mealTypes; // Make meal text all lowercase when calling API
+
+  async sendRequest() {
+    const requestParams = {
+      ...(this.search.field ? { query: this.search.field } : {}),
+      ...(this.search.cuisine ? { cuisine: this.search.cuisine.toString() } : {} ),
+      ...(this.search.diet ? { diet: this.search.diet } : {} ),
+      ...(this.search.meal ? { type: this.search.meal } : {}),
+      instructionsRequired: this.search.instructions,
+      addRecipeNutrition: this.search.nutrition,
+      addRecipeInformation: this.search.recipeInfo,
+      apiKey: API_KEY
+    };
+    axios.get("https://api.spoonacular.com/recipes/complexSearch", {
+      params: requestParams,
+    }).then((res: AxiosResponse) => {
+      console.log(res.data);
+    }).catch((err: Error) => {
+      console.log(err.message);
+    });
+  }
+  async randomSearch() {
+    const requestParams = {
+      number: 10,
+      apiKey: API_KEY
+    };
+    axios.get("https://api.spoonacular.com/recipes/random", {
+      params: requestParams,
+    }).then((res: AxiosResponse) => {
+      console.log(res.data);
+    }).catch((err: Error) => {
+      console.log(err.message);
+    });
+  }
 }
 </script>
 
@@ -156,8 +194,15 @@ export default class LandingView extends Vue {
   top: 40%;
   left: 25%;
 }
-#searchArea /deep/ .check label {
+#searchArea /deep/ .switch label {
   color:black;
-  font-weight: bolder;
+  font-weight: bold;
+}
+#searchBtn {
+  width: 100%;
+  border-radius: 20px;
+}
+#switches {
+  margin-left: 30px;
 }
 </style>
