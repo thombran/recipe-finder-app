@@ -5,7 +5,9 @@
           <v-list-item class="px-2">
             <v-list-item-avatar>
               <v-img
-                src="https://randomuser.me/api/portraits/women/85.jpg"
+                :src="userPhotoURL"
+                v-if="userPhotoURL.length > 0"
+                width="64"
               ></v-img>
             </v-list-item-avatar>
           </v-list-item>
@@ -13,9 +15,9 @@
           <v-list-item link>
             <v-list-item-content>
               <v-list-item-title class="text-h6">
-                Sandra Adams
+                {{userName}}
               </v-list-item-title>
-              <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
+              <v-list-item-subtitle>{{userEmail}}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -78,14 +80,29 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Auth, getAuth } from "firebase/auth";
+import { Auth, getAuth, User, onAuthStateChanged } from "firebase/auth";
 
 @Component
 export default class NavBar extends Vue {
+  auth: Auth | null = null;
+  userPhotoURL = "";
+  userName = "";
+  userEmail = "";
 
-    async logout(): Promise<void> {
-    const auth: Auth | null = getAuth();
-    await auth.signOut().then(() => { this.$router.replace({ path: "/login" })});
+  mounted(): void {
+    this.auth = getAuth();
+    onAuthStateChanged(this.auth, (user: User | null) => {
+      if (user) {
+        this.userPhotoURL = user.photoURL ?? "https://bodhicounseling.com/wp-content/uploads/2018/05/blank-profile-picture-973460_960_720-300x300.png";
+        this.userName = `${user.displayName ?? "No Name"}`;
+        this.userEmail = `${user.email ?? "No Email"}`;
+      }
+    });
+  }
+
+  async logout(): Promise<void> {
+    this.auth = getAuth();
+    await this.auth.signOut().then(() => { this.$router.replace({ path: "/login" })});
   }
 }
 </script>
