@@ -14,6 +14,7 @@ type Recipe = {
     servings: number,
     sourceUrl: string,
     title: string,
+    id: number
 };
 
 type Ingredient = {

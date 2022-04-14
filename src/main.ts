@@ -5,7 +5,7 @@ import router from "./router";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import  firebaseConfig  from "./myConfig";
+import { firebaseConfig } from "./myConfig";
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';

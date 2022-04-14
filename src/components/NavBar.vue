@@ -61,7 +61,7 @@
             </v-list-item-icon>
             <v-list-item-title>Meal Prep</v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="search">
             <v-list-item-icon>
               <v-icon>mdi-magnify</v-icon>
             </v-list-item-icon>
@@ -98,6 +98,10 @@ export default class NavBar extends Vue {
         this.userEmail = `${user.email ?? "No Email"}`;
       }
     });
+  }
+
+  search(): void {
+    this.$router.replace({ path: "/home" });
   }
 
   async logout(): Promise<void> {
