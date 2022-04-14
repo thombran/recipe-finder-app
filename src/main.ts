@@ -4,6 +4,7 @@ import App from './App.vue';
 import router from "./router";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import { initializeApp } from 'firebase/app';
+import { getFirestore, Firestore } from "firebase/firestore";
 import { getAnalytics } from 'firebase/analytics';
 import { firebaseConfig } from "./myConfig";
 
@@ -13,6 +14,7 @@ import vuetify from './plugins/vuetify'
 
 Vue.config.productionTip = false;
 const app = initializeApp(firebaseConfig);
+export const db: Firestore = getFirestore(app);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const analytics = getAnalytics(app);
 

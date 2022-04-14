@@ -4,7 +4,7 @@
     <h1>Search Results</h1>
     <v-row id="results">
         <v-col id="cards" v-for="(recipe, pos) in recipesJSON.recipes" :key="pos">
-            <RecipeCard :recipeInfo="recipe" :v-on:saveMeal="saveRecipe(recipe.title)" />
+            <RecipeCard :recipeInfo="recipe" />
         </v-col>
     </v-row>
   </div>
@@ -32,12 +32,12 @@ export default class SearchResultsView extends Vue {
   beforeMount() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.recipesJSON = JSON.parse(this.recipes!);
+    this.recipesJSON!.recipes = this.recipesJSON!.results; //Results array is different in non-random search
   }
 
   saveRecipe(recipeName: string) {
     console.log("Recipe saved:", recipeName);
   }
- 
 }
 </script>
 
