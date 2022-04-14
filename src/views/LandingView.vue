@@ -121,7 +121,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue";
-import { cuisineTypes, dietTypes, mealTypes } from "../types";
+import { cuisineTypes, dietTypes, mealTypes, RecipeResponse } from "../types";
 import axios, { AxiosResponse } from "axios";
 import { API_KEY } from "../secrets";
 
@@ -170,8 +170,9 @@ export default class LandingView extends Vue {
     };
     axios.get("https://api.spoonacular.com/recipes/random", {
       params: requestParams,
-    }).then((res: AxiosResponse) => {
-      console.log(res.data);
+    }).then((response: AxiosResponse) => response.data)
+    .then((recipes: RecipeResponse) => {
+      console.log(recipes.recipes);
     }).catch((err: Error) => {
       console.log(err.message);
     });
