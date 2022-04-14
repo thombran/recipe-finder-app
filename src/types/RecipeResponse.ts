@@ -1,5 +1,6 @@
 type RecipeResponse = {
     recipes: Array<Recipe>,
+    results: Array<Recipe>
     length: number
 };
 

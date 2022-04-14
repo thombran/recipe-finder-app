@@ -31,6 +31,7 @@ recipesJSON: RecipeResponse | undefined;
 beforeMount() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.recipesJSON = JSON.parse(this.recipes!);
+    this.recipesJSON!.recipes = this.recipesJSON!.results; //Results array is different in non-random search
 }
  
 }

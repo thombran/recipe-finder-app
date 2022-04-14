@@ -1,5 +1,5 @@
 <template>
-  <v-card dark>
+  <v-card dark class="recipe">
     <v-card-title>{{this.recipeInfo.title}}</v-card-title>
     <v-card-subtitle>Ready In: {{this.recipeInfo.readyInMinutes}} minutes</v-card-subtitle>
     <v-img height="auto" :src="recipeInfo.image"></v-img>
@@ -18,4 +18,9 @@ export default class RecipeCard extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.recipe > img {
+  height:max-content;
+  width: auto;
+}
+</style>
