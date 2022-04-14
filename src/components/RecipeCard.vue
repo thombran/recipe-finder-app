@@ -1,6 +1,8 @@
 <template>
-  <v-card>
-    <v-img height="250" :src="recipeInfo.image"></v-img>
+  <v-card dark>
+    <v-card-title>{{this.recipeInfo.title}}</v-card-title>
+    <v-card-subtitle>Ready In: {{this.recipeInfo.readyInMinutes}} minutes</v-card-subtitle>
+    <v-img height="auto" :src="recipeInfo.image"></v-img>
   </v-card>
 </template>
 
