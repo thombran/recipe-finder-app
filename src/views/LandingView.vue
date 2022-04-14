@@ -168,7 +168,10 @@ export default class LandingView extends Vue {
       })
       .then((response: AxiosResponse) => response.data)
       .then((recipes: RecipeResponse) => {
-        this.$router.push({ name: "results", params: {recipes: JSON.stringify(recipes)}});
+        this.$router.push({
+          name: "results",
+          params: { recipes: JSON.stringify(recipes) },
+        });
       })
       .catch((err: Error) => {
         console.log(err.message);
@@ -186,7 +189,10 @@ export default class LandingView extends Vue {
       })
       .then((response: AxiosResponse) => response.data)
       .then((recipes: RecipeResponse) => {
-        this.$router.push({ name: "results", params: {recipes: JSON.stringify(recipes)}});
+        this.$router.push({
+          name: "results",
+          params: { recipes: JSON.stringify(recipes) },
+        });
       })
       .catch((err: Error) => {
         console.log(err.message);
