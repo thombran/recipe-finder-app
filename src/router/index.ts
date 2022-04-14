@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import SignupView from "../views/SignupView.vue";
 import LoginView from "../views/LoginView.vue";
 import LandingView from "../views/LandingView.vue";
+import SearchResultsView from "../views/SearchResultsView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 Vue.use(VueRouter);
@@ -22,6 +23,12 @@ const routes: Array<RouteConfig> = [
     path: "/home",
     name: "home",
     component: LandingView,
+  },
+  {
+    path: "/searchResults",
+    name: "results",
+    component: SearchResultsView,
+    props: true,
   },
 ];
 

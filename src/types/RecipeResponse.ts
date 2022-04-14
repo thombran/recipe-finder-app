@@ -24,4 +24,4 @@ type Ingredient = {
     original: string
 };
 
-export { RecipeResponse };
+export { RecipeResponse, Recipe };

@@ -106,7 +106,12 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-btn block color="success" elevation="2" rounded @click="randomSearch"
+          <v-btn
+            block
+            color="success"
+            elevation="2"
+            rounded
+            @click="randomSearch"
             >Feeling Lucky?</v-btn
           >
         </v-col>
@@ -147,35 +152,45 @@ export default class LandingView extends Vue {
   async sendRequest() {
     const requestParams = {
       ...(this.search.field ? { query: this.search.field } : {}),
-      ...(this.search.cuisine ? { cuisine: this.search.cuisine.toString() } : {} ),
-      ...(this.search.diet ? { diet: this.search.diet } : {} ),
+      ...(this.search.cuisine
+        ? { cuisine: this.search.cuisine.toString() }
+        : {}),
+      ...(this.search.diet ? { diet: this.search.diet } : {}),
       ...(this.search.meal ? { type: this.search.meal } : {}),
       instructionsRequired: this.search.instructions,
       addRecipeNutrition: this.search.nutrition,
       addRecipeInformation: this.search.recipeInfo,
-      apiKey: API_KEY
+      apiKey: API_KEY,
     };
-    axios.get("https://api.spoonacular.com/recipes/complexSearch", {
-      params: requestParams,
-    }).then((res: AxiosResponse) => {
-      console.log(res.data);
-    }).catch((err: Error) => {
-      console.log(err.message);
-    });
+    axios
+      .get("https://api.spoonacular.com/recipes/complexSearch", {
+        params: requestParams,
+      })
+      .then((response: AxiosResponse) => response.data)
+      .then((recipes: RecipeResponse) => {
+        this.$router.replace({ name: "results", params: {recipes: JSON.stringify(recipes)}});
+      })
+      .catch((err: Error) => {
+        console.log(err.message);
+      });
   }
+
   async randomSearch() {
     const requestParams = {
       number: 10,
-      apiKey: API_KEY
+      apiKey: API_KEY,
     };
-    axios.get("https://api.spoonacular.com/recipes/random", {
-      params: requestParams,
-    }).then((response: AxiosResponse) => response.data)
-    .then((recipes: RecipeResponse) => {
-      console.log(recipes.recipes);
-    }).catch((err: Error) => {
-      console.log(err.message);
-    });
+    axios
+      .get("https://api.spoonacular.com/recipes/random", {
+        params: requestParams,
+      })
+      .then((response: AxiosResponse) => response.data)
+      .then((recipes: RecipeResponse) => {
+        this.$router.replace({ name: "results", params: {recipes: JSON.stringify(recipes)}});
+      })
+      .catch((err: Error) => {
+        console.log(err.message);
+      });
   }
 }
 </script>
@@ -190,13 +205,13 @@ export default class LandingView extends Vue {
   min-height: 100vh;
   color: black;
 }
-#searchArea{
+#searchArea {
   position: absolute;
   top: 40%;
   left: 25%;
 }
 #searchArea /deep/ .switch label {
-  color:black;
+  color: black;
   font-weight: bold;
 }
 #searchBtn {
