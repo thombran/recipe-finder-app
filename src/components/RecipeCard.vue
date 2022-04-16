@@ -1,6 +1,6 @@
 <template>
   <div class="flex-no-wrap justify-space-between">
-    <v-card class="recipe mx-auto" max-width="100vw" fluid>
+    <v-card class="recipe mx-auto" max-width="100vw" fluid id="card">
       <v-card-title>{{ this.recipeInfo.title }}</v-card-title>
       <v-card-subtitle
         >Ready In: {{ this.recipeInfo.readyInMinutes }} minutes</v-card-subtitle
@@ -9,7 +9,12 @@
         >Servings: {{ this.recipeInfo.servings }}</v-card-subtitle
       >
       <v-img :src="recipeInfo.image"></v-img>
-      <v-btn outlined block id="saveBtn" @click="saveRecipe">Save</v-btn>
+      <v-btn outlined block id="saveBtn" v-if="save" @click="saveRecipe"
+        >Save</v-btn
+      >
+      <b-btn outlined block id="deleteBtn" v-else @click="deleteRecipe"
+        >Delete</b-btn
+      >
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>Instructions</v-expansion-panel-header>
@@ -43,7 +48,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import { InstructionSet } from "../types/RecipeResponse";
 import { Auth, getAuth, User, onAuthStateChanged } from "firebase/auth";
 import { db } from "../main";
-import { DocumentReference, doc, setDoc } from "firebase/firestore";
+import { DocumentReference, doc, setDoc, deleteDoc } from "firebase/firestore";
 
 import { Recipe } from "../types";
 
@@ -54,6 +59,9 @@ export default class RecipeCard extends Vue {
 
   @Prop()
   readonly type: string | undefined;
+
+  @Prop()
+  readonly save: boolean | undefined;
 
   auth: Auth | null = null;
 
@@ -69,7 +77,10 @@ export default class RecipeCard extends Vue {
           "savedRecipes",
           this.recipeInfo!.id.toString()
         );
-        setDoc(savedRecipeDocument, {type: this.type, ...this.recipeInfo}).then(() => {
+        setDoc(savedRecipeDocument, {
+          type: this.type,
+          ...this.recipeInfo,
+        }).then(() => {
           window.alert("Successfully saved recipe!");
         });
       }
@@ -113,6 +124,37 @@ export default class RecipeCard extends Vue {
       }
     }
     return returnString;
+  }
+
+  deleteRecipe(): void {
+    const cardElement = document.querySelector("#card");
+    if (cardElement) {
+      cardElement.remove();
+      this.auth = getAuth();
+      onAuthStateChanged(this.auth, (user: User | null) => {
+        if (user) {
+          const uid = user.uid;
+          const recipeDoc: DocumentReference = doc(
+            db,
+            "Users",
+            uid,
+            "savedRecipes",
+            this.recipeInfo!.id.toString()
+          );
+          deleteDoc(recipeDoc)
+            .then(() => {
+              window.alert(
+                `Successfully deleted recipe: ${this.recipeInfo?.title}.`
+              );
+            })
+            .catch((err: Error) => {
+              window.alert(
+                `Could not delete recipe from user data: ${err.message}`
+              );
+            });
+        }
+      });
+    }
   }
 }
 </script>

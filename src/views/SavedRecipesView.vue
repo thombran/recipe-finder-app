@@ -8,7 +8,7 @@
           v-for="(recipe, pos) in recipesJSON.recipes"
           :key="pos"
         >
-          <RecipeCard id="cards" :recipeInfo="recipe" :type="recipe.type" />
+          <RecipeCard id="cards" :recipeInfo="recipe" :type="recipe.type" :save="false" />
         </v-col>
       </v-row>
     </v-container>
