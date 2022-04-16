@@ -31,7 +31,7 @@ import RecipeCard from "../components/RecipeCard.vue";
     RecipeCard,
   },
 })
-export default class SearchResultsView extends Vue {
+export default class SavedRecipesView extends Vue {
   recipesJSON: RecipeResponse = { recipes: [], results: [], length: 0 };
 
   auth: Auth | null = null;
