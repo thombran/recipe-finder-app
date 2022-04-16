@@ -73,7 +73,7 @@ export default class RecipeCard extends Vue {
           "savedRecipes",
           this.recipeInfo!.id.toString()
         );
-        setDoc(savedRecipeDocument, this.recipeInfo).then(() => {
+        setDoc(savedRecipeDocument, {type: this.type, ...this.recipeInfo}).then(() => {
           window.alert("Successfully saved recipe!");
         });
       }
