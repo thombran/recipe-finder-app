@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { RecipeResponse } from "@/types";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue";
