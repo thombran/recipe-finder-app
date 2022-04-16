@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { InstructionSet, NutritionInfo } from "../types/RecipeResponse";
+import { InstructionSet } from "../types/RecipeResponse";
 import { Auth, getAuth, User, onAuthStateChanged } from "firebase/auth";
 import { db } from "../main";
 import { DocumentReference, doc, setDoc } from "firebase/firestore";
