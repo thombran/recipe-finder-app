@@ -1,37 +1,41 @@
 <template>
-  <v-card class="recipe">
-    <v-card-title>{{ this.recipeInfo.title }}</v-card-title>
-    <v-card-subtitle
-      >Ready In: {{ this.recipeInfo.readyInMinutes }} minutes</v-card-subtitle
-    >
-    <v-card-subtitle id="bottomSub"
-      >Servings: {{ this.recipeInfo.servings }}</v-card-subtitle
-    >
-    <v-img height="auto" :src="recipeInfo.image"></v-img>
-    <v-btn outlined block id="saveBtn" @click="saveRecipe">Save</v-btn>
-    <v-expansion-panels popout>
-      <v-expansion-panel>
-        <v-expansion-panel-header>Instructions</v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-card>
-            <v-card-text
-              v-html="parseInstructions(recipeInfo.analyzedInstructions)"
-            ></v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-header>Ingredients</v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-card>
-            <v-card-text
-              v-html="parseIngredients(recipeInfo.nutrition)"
-            ></v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
-  </v-card>
+  <div class="flex-no-wrap justify-space-between">
+    <v-card class="recipe mx-auto" max-width="100vw" fluid>
+      <v-card-title>{{ this.recipeInfo.title }}</v-card-title>
+      <v-card-subtitle
+        >Ready In: {{ this.recipeInfo.readyInMinutes }} minutes</v-card-subtitle
+      >
+      <v-card-subtitle id="bottomSub"
+        >Servings: {{ this.recipeInfo.servings }}</v-card-subtitle
+      >
+      <v-img :src="recipeInfo.image"></v-img>
+      <v-btn outlined block id="saveBtn" @click="saveRecipe">Save</v-btn>
+      <v-expansion-panels>
+        <v-expansion-panel>
+          <v-expansion-panel-header>Instructions</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            {{
+              this.type === "random"
+                ? this.recipeInfo.instructions
+                : this.parseInstructions(this.recipeInfo.analyzedInstructions)
+            }}
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel>
+          <v-expansion-panel-header>Ingredients</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            {{ this.parseIngredients(this.recipeInfo) }}
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel>
+          <v-expansion-panel-header>Equipment</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            {{ this.parseEquipment(this.recipeInfo.analyzedInstructions) }}
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -47,6 +51,13 @@ import { Recipe } from "../types";
 export default class RecipeCard extends Vue {
   @Prop()
   readonly recipeInfo: Recipe | undefined;
+
+  @Prop()
+  readonly type: string | undefined;
+
+  mounted() {
+    console.log(this.recipeInfo);
+  }
 
   auth: Auth | null = null;
 
@@ -73,35 +84,44 @@ export default class RecipeCard extends Vue {
     let returnString = "";
     for (let i = 0; i < instructions[0].steps.length; i++) {
       const currStep = instructions[0].steps[i];
-      returnString += `<h6>Step: ${currStep.number}</h6><br/>Equipment: <br /><ul>`;
-      for (let equipment of currStep.equipment) {
-        returnString += `<li>${equipment.name}</li>`;
-      }
-      returnString += "</ul><br />Ingredients: <br /><ul>";
-      for (let ingredient of currStep.ingredients) {
-        returnString += `<li>${ingredient.name}</li>`;
-      }
-      returnString += `</ul><br /><p><strong>${currStep.step}</strong></p>`;
+      returnString += `Step ${currStep.number}. `;
+      returnString += `${currStep.step} `;
     }
     return returnString;
   }
 
-  parseIngredients(nutrition: NutritionInfo) {
-    let returnString = "<ol>";
-    for (let ingredient of nutrition.ingredients) {
-      returnString += `<li>${(ingredient.amount * this.recipeInfo!.servings).toFixed(1)} ${ingredient.unit} of ${ingredient.name}</li>`;
+  parseIngredients(recipe: Recipe) {
+    let returnString = "";
+    if (this.type === "search") {
+      const nutrition = recipe.nutrition;
+      for (let ingredient of nutrition.ingredients) {
+        returnString += `- ${(
+          ingredient.amount * this.recipeInfo!.servings
+        ).toFixed(1)} ${ingredient.unit} of ${ingredient.name}\r\n`;
+      }
+    } else {
+      const ingredients = recipe.extendedIngredients;
+      for (let ingredient of ingredients) {
+        returnString += `- ${ingredient.amount} ${ingredient.measures.us.unitLong} of ${ingredient.name}\r\n`;
+      }
     }
-    returnString += "</ol>";
+    return returnString;
+  }
+
+  parseEquipment(instructions: Array<InstructionSet>) {
+    let returnString = "";
+    for (let i = 0; i < instructions[0].steps.length; i++) {
+      const currStep = instructions[0].steps[i];
+      for (let equipment of currStep.equipment) {
+        returnString += `${equipment.name}, `;
+      }
+    }
     return returnString;
   }
 }
 </script>
 
 <style scoped>
-.recipe > img {
-  height: max-content;
-  width: auto;
-}
 #bottomSub {
   margin-top: -30px;
 }

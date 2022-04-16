@@ -78,32 +78,6 @@
           </v-container>
         </v-col>
       </v-row>
-      <v-row id="switches">
-        <v-col>
-          <v-switch
-            v-model="search.instructions"
-            :label="'Want Instructions?'"
-            color="success"
-            class="switch"
-          ></v-switch>
-        </v-col>
-        <v-col>
-          <v-switch
-            v-model="search.recipeInfo"
-            :label="'More information about the recipes?'"
-            color="success"
-            class="switch"
-          ></v-switch>
-        </v-col>
-        <v-col>
-          <v-switch
-            v-model="search.nutrition"
-            :label="'Want nutrition information?'"
-            color="success"
-            class="switch"
-          ></v-switch>
-        </v-col>
-      </v-row>
       <v-row>
         <v-col>
           <v-btn
@@ -157,9 +131,9 @@ export default class LandingView extends Vue {
         : {}),
       ...(this.search.diet ? { diet: this.search.diet } : {}),
       ...(this.search.meal ? { type: this.search.meal } : {}),
-      instructionsRequired: this.search.instructions,
-      addRecipeNutrition: this.search.nutrition,
-      addRecipeInformation: this.search.recipeInfo,
+      instructionsRequired: true,
+      addRecipeNutrition: true,
+      addRecipeInformation: true,
       apiKey: API_KEY,
     };
     axios
@@ -170,7 +144,7 @@ export default class LandingView extends Vue {
       .then((recipes: RecipeResponse) => {
         this.$router.push({
           name: "results",
-          params: { recipes: JSON.stringify(recipes) },
+          params: { recipes: JSON.stringify(recipes), type: "search" },
         });
       })
       .catch((err: Error) => {
@@ -191,7 +165,7 @@ export default class LandingView extends Vue {
       .then((recipes: RecipeResponse) => {
         this.$router.push({
           name: "results",
-          params: { recipes: JSON.stringify(recipes) },
+          params: { recipes: JSON.stringify(recipes), type: "random" },
         });
       })
       .catch((err: Error) => {

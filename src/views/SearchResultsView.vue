@@ -1,12 +1,18 @@
 <template>
   <div id="resultsPage">
-    <NavBar />
     <h1>Search Results</h1>
-    <v-row id="results">
-        <v-col id="cards" v-for="(recipe, pos) in recipesJSON.recipes" :key="pos">
-            <RecipeCard :recipeInfo="recipe" />
+    <v-container id="container">
+      <v-row>
+        <v-col
+          cols="12"
+          v-for="(recipe, pos) in recipesJSON.recipes"
+          :key="pos"
+        >
+          <RecipeCard id="cards" :recipeInfo="recipe" :type="type" />
         </v-col>
-    </v-row>
+      </v-row>
+    </v-container>
+    <NavBar />
   </div>
 </template>
 
@@ -16,50 +22,48 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import NavBar from "../components/NavBar.vue";
 import RecipeCard from "../components/RecipeCard.vue";
 
-
 @Component({
   components: {
     NavBar,
-    RecipeCard
+    RecipeCard,
   },
 })
 export default class SearchResultsView extends Vue {
   @Prop()
   recipes: string | undefined;
 
+  @Prop()
+  type: string | undefined;
+
   recipesJSON: RecipeResponse | undefined;
 
   beforeMount() {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.recipesJSON = JSON.parse(this.recipes!);
-    this.recipesJSON!.recipes = this.recipesJSON!.results; //Results array is different in non-random search
-  }
-
-  saveRecipe(recipeName: string) {
-    console.log("Recipe saved:", recipeName);
+    if (this.type === "search") {
+      this.recipesJSON!.recipes = this.recipesJSON!.results; //Results array is different in non-random search
+    }
   }
 }
 </script>
 
 <style scoped>
 #resultsPage {
-  background-image: url("../assets/landingBackground.jpg");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  background-image: url("../assets/searchWood.jpg");
+  -webkit-background-size: auto;
+  -moz-background-size: auto;
+  -o-background-size: auto;
+  background-size: auto;
+  background-repeat: repeat;
   min-height: 100vh;
   color: black;
 }
-#results {
-  position: absolute;
-  top: 10%;
-  left: 10%;
-  right: 10%;
+#container {
+  margin-top: 5%;
 }
 h1 {
   position: absolute;
-  top: 2.5%;
-  left: 10%;
+  top: 0.2%;
+  left: 15%;
+  color: white;
 }
 </style>
