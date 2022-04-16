@@ -31,7 +31,7 @@
             </v-list-item-icon>
             <v-list-item-title>My Account</v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="savedRecipes">
             <v-list-item-icon>
               <v-icon>mdi-book-open-page-variant</v-icon>
             </v-list-item-icon>
@@ -107,6 +107,10 @@ export default class NavBar extends Vue {
   async logout(): Promise<void> {
     this.auth = getAuth();
     await this.auth.signOut().then(() => { this.$router.replace({ path: "/login" })});
+  }
+
+  savedRecipes(): void {
+    this.$router.push({ path: "/savedRecipes"});
   }
 }
 </script>

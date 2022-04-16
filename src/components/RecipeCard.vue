@@ -55,10 +55,6 @@ export default class RecipeCard extends Vue {
   @Prop()
   readonly type: string | undefined;
 
-  mounted() {
-    console.log(this.recipeInfo);
-  }
-
   auth: Auth | null = null;
 
   saveRecipe() {
