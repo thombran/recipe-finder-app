@@ -68,24 +68,23 @@ export default class RecipeCard extends Vue {
 
   saveRecipe() {
     this.auth = getAuth();
-    onAuthStateChanged(this.auth, (user: User | null) => {
-      if (user) {
-        const uid = user.uid;
-        const savedRecipeDocument: DocumentReference = doc(
-          db,
-          "Users",
-          uid,
-          "savedRecipes",
-          this.recipeInfo!.id.toString()
-        );
-        setDoc(savedRecipeDocument, {
-          type: this.type,
-          ...this.recipeInfo,
-        }).then(() => {
-          window.alert("Successfully saved recipe!");
-        });
-      }
-    });
+    const user = this.auth.currentUser;
+    if (user) {
+      const uid = user.uid;
+      const savedRecipeDocument: DocumentReference = doc(
+        db,
+        "Users",
+        uid,
+        "savedRecipes",
+        this.recipeInfo!.id.toString()
+      );
+      setDoc(savedRecipeDocument, {
+        type: this.type,
+        ...this.recipeInfo,
+      }).then(() => {
+        window.alert("Successfully saved recipe!");
+      });
+    }
   }
 
   parseInstructions(instructions: Array<InstructionSet>) {
@@ -132,29 +131,28 @@ export default class RecipeCard extends Vue {
     if (cardElement) {
       cardElement.remove();
       this.auth = getAuth();
-      onAuthStateChanged(this.auth, (user: User | null) => {
-        if (user) {
-          const uid = user.uid;
-          const recipeDoc: DocumentReference = doc(
-            db,
-            "Users",
-            uid,
-            "savedRecipes",
-            this.recipeInfo!.id.toString()
-          );
-          deleteDoc(recipeDoc)
-            .then(() => {
-              window.alert(
-                `Successfully deleted recipe: ${this.recipeInfo?.title}.`
-              );
-            })
-            .catch((err: Error) => {
-              window.alert(
-                `Could not delete recipe from user data: ${err.message}`
-              );
-            });
-        }
-      });
+      const user = this.auth.currentUser;
+      if (user) {
+        const uid = user.uid;
+        const recipeDoc: DocumentReference = doc(
+          db,
+          "Users",
+          uid,
+          "savedRecipes",
+          this.recipeInfo!.id.toString()
+        );
+        deleteDoc(recipeDoc)
+          .then(() => {
+            window.alert(
+              `Successfully deleted recipe: ${this.recipeInfo?.title}.`
+            );
+          })
+          .catch((err: Error) => {
+            window.alert(
+              `Could not delete recipe from user data: ${err.message}`
+            );
+          });
+      }
     }
   }
 }
