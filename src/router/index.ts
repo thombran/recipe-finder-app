@@ -5,6 +5,7 @@ import LoginView from "../views/LoginView.vue";
 import LandingView from "../views/LandingView.vue";
 import SearchResultsView from "../views/SearchResultsView.vue";
 import SavedRecipesView from "../views/SavedRecipesView.vue";
+import ProfileView from "../views/ProfileView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 Vue.use(VueRouter);
@@ -35,6 +36,11 @@ const routes: Array<RouteConfig> = [
     path: "/savedRecipes",
     name: "saved",
     component: SavedRecipesView
+  },
+  {
+    path: "/myAccount",
+    name: "account",
+    component: ProfileView
   },
 ];
 

@@ -10,9 +10,6 @@
                 width="64"
               ></v-img>
             </v-list-item-avatar>
-          </v-list-item>
-
-          <v-list-item link>
             <v-list-item-content>
               <v-list-item-title class="text-h6">
                 {{userName}}
@@ -25,7 +22,7 @@
         <v-divider></v-divider>
 
         <v-list nav dense>
-          <v-list-item link>
+          <v-list-item link @click="myAccount">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
@@ -112,13 +109,9 @@ export default class NavBar extends Vue {
   savedRecipes(): void {
     this.$router.push({ path: "/savedRecipes"});
   }
+
+  myAccount(): void {
+    this.$router.push({ path: "/myAccount" });
+  }
 }
 </script>
-
-<style scoped>
-#drawer {
-  z-index: 1;
-  top: 0;
-  left: 0;
-}
-</style>
