@@ -57,13 +57,12 @@ export default class ProfileView extends Vue {
     const delAccount = window.confirm("Would you like to delete this account?");
     if (delAccount) {
       this.auth = getAuth();
-      onAuthStateChanged(this.auth, (user: User | null) => {
-        if (user) {
-          const uid = user.uid;
-          // deleteDoc(doc(db, "Users", uid));
-          deleteUser(user).then(() => { this.$router.replace({ path: "/login" })});
-        }
-      });
+      const user = this.auth.currentUser;
+      if (user) {
+        const uid = user.uid;
+        deleteDoc(doc(db, "Users", uid));
+        deleteUser(user).then(() => { this.$router.replace({ path: "/login" })});
+      }
     }
   }
 }
