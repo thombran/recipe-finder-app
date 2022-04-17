@@ -1,6 +1,6 @@
 <template>
   <div id="resultsPage">
-    <h1>Search Results</h1>
+    <h1>Saved Recipes</h1>
     <v-container id="container">
       <v-row>
         <v-col

@@ -1,6 +1,6 @@
 <template>
     <div class="ma-12 pa-12 nav">
-      <v-navigation-drawer absolute permanent left expand-on-hover dark>
+      <v-navigation-drawer id="drawer" fixed permanent left expand-on-hover dark>
         <v-list>
           <v-list-item class="px-2">
             <v-list-item-avatar>
@@ -114,3 +114,11 @@ export default class NavBar extends Vue {
   }
 }
 </script>
+
+<style scoped>
+#drawer {
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+</style>
