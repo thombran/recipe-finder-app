@@ -9,17 +9,13 @@
 <script lang="ts">
 import { Review } from "@/types";
 import { Component, Vue } from "vue-property-decorator";
-import { Auth, onAuthStateChanged, getAuth, User } from "firebase/auth";
+
 import {
   collection,
   getDocs,
-  DocumentReference,
-  doc,
-  setDoc,
   CollectionReference,
 } from "firebase/firestore";
 import { db } from "../main";
-import axios, { AxiosResponse } from "axios";
 import NavBar from "../components/NavBar.vue";
 import ReviewCard from "../components/ReviewCard.vue";
 
