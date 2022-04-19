@@ -46,7 +46,7 @@
             </v-list-item-icon>
             <v-list-item-title>Reviews</v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="popular">
             <v-list-item-icon>
               <v-icon>mdi-exclamation-thick</v-icon>
             </v-list-item-icon>
@@ -78,6 +78,9 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Auth, getAuth, User, onAuthStateChanged } from "firebase/auth";
+import axios, { AxiosResponse } from "axios";
+import { API_KEY } from "../secrets";
+import { RecipeResponse } from "../types";
 
 @Component
 export default class NavBar extends Vue {
@@ -115,7 +118,29 @@ export default class NavBar extends Vue {
   }
 
   completed(): void {
-    this.$router.push({ path: "/completedRecipes" })
+    this.$router.push({ path: "/completedRecipes" });
+  }
+
+  popular(): void {
+    const requestParams = {
+      sort: "popularity",
+      apiKey: API_KEY
+    }
+
+    axios
+      .get("https://api.spoonacular.com/recipes/complexSearch", {
+        params: requestParams
+      })
+      .then((response: AxiosResponse) => response.data)
+      .then((recipes: RecipeResponse) => {
+        this.$router.push({
+          name: "popular",
+          params: { recipes: JSON.stringify(recipes) }
+        });
+      })
+      .catch((err: Error) => {
+        console.log(err.message);
+      });
   }
 }
 </script>
