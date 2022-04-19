@@ -80,7 +80,7 @@ import { InstructionSet } from "../types/RecipeResponse";
 import { Auth, getAuth } from "firebase/auth";
 import { db } from "../main";
 import { DocumentReference, doc, setDoc, deleteDoc } from "firebase/firestore";
-import { Chart, ChartConfiguration, ChartItem, registerables } from "chart.js";
+import { Chart, ChartItem, registerables } from "chart.js";
 
 import { Recipe } from "../types";
 
