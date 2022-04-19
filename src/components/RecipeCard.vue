@@ -38,6 +38,14 @@
             {{ this.parseEquipment(this.recipeInfo.analyzedInstructions) }}
           </v-expansion-panel-content>
         </v-expansion-panel>
+        <v-expansion-panel v-if="type === 'search'">
+          <v-expansion-panel-header
+            >Nutrition Breakdown</v-expansion-panel-header
+          >
+          <v-expansion-panel-content id="expansion-canvas" eager>
+            <canvas id="canvas" width="400" height="400"></canvas>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
       </v-expansion-panels>
     </v-card>
   </div>
@@ -47,9 +55,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { InstructionSet } from "../types/RecipeResponse";
-import { Auth, getAuth, User, onAuthStateChanged } from "firebase/auth";
+import { Auth, getAuth } from "firebase/auth";
 import { db } from "../main";
 import { DocumentReference, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { Chart, ChartConfiguration, ChartItem, registerables } from "chart.js";
 
 import { Recipe } from "../types";
 
@@ -65,6 +74,60 @@ export default class RecipeCard extends Vue {
   readonly save: boolean | undefined;
 
   auth: Auth | null = null;
+  nutritionChart: Chart | undefined;
+  dialog = false;
+
+  mounted() {
+    if (this.type === "search") { // Random query does not provide info to create these graphs
+      const labels: Array<string> = [];
+      const amounts: Array<number> = [];
+      this.recipeInfo?.nutrition.nutrients.forEach((ingredient) => {
+        if (ingredient.name !== "Calories" && ingredient.unit !== "IU") { // Remove the first entry and the random vitamins measured in IU
+          labels.push(ingredient.name);
+          amounts.push(this.convertUnits(ingredient.unit, ingredient.amount)!);
+        }
+      });
+
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Nutrition Breakdown",
+            data: amounts,
+            hoverOffset: 2,
+            backgroundColor: this.poolColors(labels.length), // Assign random colors
+            borderColor: this.poolColors(labels.length),
+            borderWidth: 1,
+          },
+        ],
+      };
+      
+
+      Chart.register(...registerables); //Necessary for chart.js components to load
+      const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+      canvas.id = "canvas" + this.recipeInfo!.id; // If this line is not set, canvas is only set for first recipe in results
+      const ctx: ChartItem = canvas.getContext("2d") as ChartItem;
+      let chartStatus = Chart.getChart("canvas" + this.recipeInfo!.id);
+
+      if (chartStatus != undefined) {
+        chartStatus.destroy(); // Necessary to create new chart objects using this method
+      }
+
+      this.nutritionChart = new Chart(ctx, {
+        type: "doughnut",
+        data: data,
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (item: any) => `${item.label}: ${item.parsed} g`,
+              },
+            },
+          },
+        },
+      });
+    }
+  }
 
   saveRecipe() {
     this.auth = getAuth();
@@ -154,6 +217,33 @@ export default class RecipeCard extends Vue {
           });
       }
     }
+  }
+
+  convertUnits(unit: string, amount: number) {
+    if (unit === "g") {
+      return amount;
+    } else if (unit === "mg") {
+      return amount / 1000;
+    } else if (unit === "µg") {
+      return amount / 1000000;
+    } else {
+      return null;
+    }
+  }
+
+  dynamicColors() {
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    return "rgba(" + r + "," + g + "," + b + ", 0.5)";
+  }
+
+  poolColors(a: any) {
+    var pool = [];
+    for (let i = 0; i < a; i++) {
+      pool.push(this.dynamicColors());
+    }
+    return pool;
   }
 }
 </script>
