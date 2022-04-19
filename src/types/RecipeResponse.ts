@@ -51,7 +51,8 @@ type Ingredient = {
 };
 
 type NutritionInfo = {
-    ingredients: Array<NutritionItem>
+    ingredients: Array<NutritionItem>,
+    nutrients: Array<Nutrient>
 };
 
 type NutritionItem = {
@@ -59,5 +60,12 @@ type NutritionItem = {
     name: string,
     unit: string
 };
+
+type Nutrient = {
+    name: string,
+    amount: number,
+    unit: string,
+    percentOfDailyNeeds: number
+}
 
 export { RecipeResponse, Recipe, InstructionSet, ExtendedIngredient, NutritionInfo };
