@@ -34,7 +34,7 @@
             </v-list-item-icon>
             <v-list-item-title>Saved Recipes</v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="completed">
             <v-list-item-icon>
               <v-icon>mdi-checkbox-marked-outline</v-icon>
             </v-list-item-icon>
@@ -107,11 +107,15 @@ export default class NavBar extends Vue {
   }
 
   savedRecipes(): void {
-    this.$router.push({ path: "/savedRecipes"});
+    this.$router.push({ path: "/savedRecipes" });
   }
 
   myAccount(): void {
     this.$router.push({ path: "/myAccount" });
+  }
+
+  completed(): void {
+    this.$router.push({ path: "/completedRecipes" })
   }
 }
 </script>

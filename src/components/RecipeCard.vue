@@ -1,6 +1,6 @@
 <template>
   <div class="flex-no-wrap justify-space-between">
-    <v-card class="recipe mx-auto" max-width="100vw" fluid id="card">
+    <v-card class="recipe mx-auto" max-width="100vw" fluid id="card" dark>
       <v-card-title>{{ this.recipeInfo.title }}</v-card-title>
       <v-card-subtitle
         >Ready In: {{ this.recipeInfo.readyInMinutes }} minutes</v-card-subtitle
@@ -12,9 +12,31 @@
       <v-btn outlined block id="saveBtn" v-if="save" @click="saveRecipe"
         >Save</v-btn
       >
-      <b-btn outlined block id="deleteBtn" v-else @click="deleteRecipe"
-        >Delete</b-btn
-      >
+      <template v-else>
+        <template v-if="isCompleted">
+          <v-btn
+            color="red"
+            outlined
+            block
+            id="removeCompleted"
+            @click="removeCompleted"
+            >Mark Incomplete</v-btn
+          >
+        </template>
+        <template v-else>
+          <v-btn outlined block id="deleteBtn" @click="deleteRecipe"
+            >Delete</v-btn
+          >
+          <v-btn
+            outlined
+            block
+            id="completedBtn"
+            color="success"
+            @click="markCompleted"
+            >Mark as Completed</v-btn
+          >
+        </template>
+      </template>
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>Instructions</v-expansion-panel-header>
@@ -73,16 +95,20 @@ export default class RecipeCard extends Vue {
   @Prop()
   readonly save: boolean | undefined;
 
+  @Prop()
+  readonly isCompleted: boolean | undefined;
+
   auth: Auth | null = null;
   nutritionChart: Chart | undefined;
-  dialog = false;
 
   mounted() {
-    if (this.type === "search") { // Random query does not provide info to create these graphs
+    if (this.type === "search") {
+      // Random query does not provide info to create these graphs
       const labels: Array<string> = [];
       const amounts: Array<number> = [];
       this.recipeInfo?.nutrition.nutrients.forEach((ingredient) => {
-        if (ingredient.name !== "Calories" && ingredient.unit !== "IU") { // Remove the first entry and the random vitamins measured in IU
+        if (ingredient.name !== "Calories" && ingredient.unit !== "IU") {
+          // Remove the first entry and the random vitamins measured in IU
           labels.push(ingredient.name);
           amounts.push(this.convertUnits(ingredient.unit, ingredient.amount)!);
         }
@@ -101,7 +127,6 @@ export default class RecipeCard extends Vue {
           },
         ],
       };
-      
 
       Chart.register(...registerables); //Necessary for chart.js components to load
       const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -125,6 +150,27 @@ export default class RecipeCard extends Vue {
             },
           },
         },
+      });
+    }
+  }
+
+  markCompleted(): void {
+    this.auth = getAuth();
+    const user = this.auth.currentUser;
+    if (user) {
+      const uid = user.uid;
+      const completedRecipeDocument: DocumentReference = doc(
+        db,
+        "Users",
+        uid,
+        "completedRecipes",
+        this.recipeInfo!.id.toString()
+      );
+      setDoc(completedRecipeDocument, {
+        type: this.type,
+        ...this.recipeInfo,
+      }).then(() => {
+        window.alert("Added recipe to completed list");
       });
     }
   }
@@ -213,6 +259,36 @@ export default class RecipeCard extends Vue {
           .catch((err: Error) => {
             window.alert(
               `Could not delete recipe from user data: ${err.message}`
+            );
+          });
+      }
+    }
+  }
+
+  removeCompleted(): void {
+    const cardElement = document.querySelector("#card");
+    if (cardElement) {
+      cardElement.remove();
+      this.auth = getAuth();
+      const user = this.auth.currentUser;
+      if (user) {
+        const uid = user.uid;
+        const recipeDoc: DocumentReference = doc(
+          db,
+          "Users",
+          uid,
+          "completedRecipes",
+          this.recipeInfo!.id.toString()
+        );
+        deleteDoc(recipeDoc)
+          .then(() => {
+            window.alert(
+              `Successfully marked recipe as incomplete: ${this.recipeInfo?.title}.`
+            );
+          })
+          .catch((err: Error) => {
+            window.alert(
+              `Could not remove recipe from completed recipe data: ${err.message}`
             );
           });
       }
