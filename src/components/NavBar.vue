@@ -47,7 +47,7 @@
           <v-list-item link @click="writeReview">
             <v-list-item-title>Write a Review</v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="readReviews">
             <v-list-item-title>Read Reviews</v-list-item-title>
           </v-list-item>
         </v-list-group>
@@ -129,6 +129,10 @@ export default class NavBar extends Vue {
 
   writeReview(): void {
     this.$router.push({ path: "/writeReview" });
+  }
+
+  readReviews(): void {
+    this.$router.push({ path: "/readReviews" });
   }
 }
 </script>

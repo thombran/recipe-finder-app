@@ -314,7 +314,7 @@ export default class RecipeCard extends Vue {
     return "rgba(" + r + "," + g + "," + b + ", 0.5)";
   }
 
-  poolColors(a: any) {
+  poolColors(a: number) {
     var pool = [];
     for (let i = 0; i < a; i++) {
       pool.push(this.dynamicColors());

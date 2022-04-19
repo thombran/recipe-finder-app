@@ -59,6 +59,7 @@ import axios, { AxiosResponse } from "axios";
 import { API_KEY } from "../secrets";
 import NavBar from "../components/NavBar.vue";
 import RecipeCard from "../components/RecipeCard.vue";
+import * as imageConversion from "image-conversion";
 
 @Component({
   components: {
@@ -66,7 +67,7 @@ import RecipeCard from "../components/RecipeCard.vue";
     RecipeCard,
   },
 })
-export default class CompletedRecipesView extends Vue {
+export default class WriteReviewView extends Vue {
   recipesJSON: RecipeResponse = { recipes: [], results: [], length: 0 };
   titles: Array<string> = [];
   selectedRecipe = "";
@@ -97,7 +98,7 @@ export default class CompletedRecipesView extends Vue {
     });
   }
 
-  createImage(file: File): void {
+  createImage(file: Blob): void {
     const reader = new FileReader();
     reader.onload = (e) => {
       this.usrImage = e.target!.result;
@@ -105,10 +106,11 @@ export default class CompletedRecipesView extends Vue {
     reader.readAsDataURL(file);
   }
 
-  fileChange(file: File): void {
+  async fileChange(file: Blob): Promise<void> {
     if (!file) {
       return;
     }
+    file = await imageConversion.compressAccurately(file, 500);
     this.createImage(file);
   }
 
@@ -116,10 +118,12 @@ export default class CompletedRecipesView extends Vue {
     this.auth = getAuth();
     onAuthStateChanged(this.auth, async (user: User | null) => {
       if (user && this.selectedRecipe != "") {
-        const name = user.displayName;
+        const name = user.displayName ? user.displayName : null;
         const selectedRecipe = this.recipesJSON.recipes.find(
           (recipe) => recipe.title == this.selectedRecipe
         );
+        const docName = user.uid.toString() + selectedRecipe?.id;
+        const reviewDoc: DocumentReference = doc(db, "Reviews", docName);
         if (!this.usrImage) {
           // Ger recipe image if user did not provide one
           const url = `https://api.spoonacular.com/recipes/${
@@ -130,26 +134,50 @@ export default class CompletedRecipesView extends Vue {
             .then((res: AxiosResponse) => res.data)
             .then((recipe: Recipe) => {
               this.usrImage = recipe.image;
-              const docName = user.uid.toString() + selectedRecipe?.id;
-              const reviewDoc: DocumentReference = doc(db, "Reviews", docName);
-              setDoc(reviewDoc, {
+              const doc = {
                 ReviewTitle: this.selectedRecipe,
                 ReviewText: this.reviewText,
                 ReviewImg: this.usrImage,
                 Likes: 0,
                 User: user.uid,
+                User_Name: name,
                 RecipeId: selectedRecipe?.id,
-              })
+              };
+              setDoc(reviewDoc, doc)
                 .then(() => {
-                    this.selectedRecipe = "";
-                    this.usrImage = null;
-                    this.userPhoto = null;
-                    this.reviewText = "";
                   window.alert("Successfully uploaded review!");
                 })
                 .catch((err: Error) => {
                   window.alert(err.message);
+                })
+                .finally(() => {
+                  this.selectedRecipe = "";
+                  this.usrImage = null;
+                  this.userPhoto = null;
+                  this.reviewText = "";
                 });
+            });
+        } else {
+          setDoc(reviewDoc, {
+            ReviewTitle: this.selectedRecipe,
+            ReviewText: this.reviewText,
+            ReviewImg: this.usrImage,
+            Likes: 0,
+            User: user.uid,
+            User_Name: name,
+            RecipeId: selectedRecipe?.id,
+          })
+            .then(() => {
+              window.alert("Successfully uploaded review!");
+            })
+            .catch((err: Error) => {
+              window.alert(err.message);
+            })
+            .finally(() => {
+              this.selectedRecipe = "";
+              this.usrImage = null;
+              this.userPhoto = null;
+              this.reviewText = "";
             });
         }
       } else {
