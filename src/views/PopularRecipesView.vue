@@ -8,7 +8,7 @@
           v-for="(recipe, pos) in recipesJSON.recipes"
           :key="pos"
         >
-          <RecipeCard id="cards" :recipeInfo="recipe"/>
+          <RecipeCard id="cards" :recipeInfo="recipe" :type="type" :save="true"/>
         </v-col>
       </v-row>
     </v-container>
@@ -33,9 +33,12 @@ export default class PopularReceipesView extends Vue {
   @Prop()
   recipes: string | undefined;
 
+  @Prop()
+  type: string | undefined;
+
   recipesJSON: RecipeResponse | null = null;
 
-  beforeMount() {
+  created() {
     this.recipesJSON = JSON.parse(this.recipes!);
     this.recipesJSON!.recipes = this.recipesJSON!.results;
     console.log(this.recipesJSON!.recipes);

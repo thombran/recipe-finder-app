@@ -80,7 +80,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Auth, getAuth, User, onAuthStateChanged } from "firebase/auth";
 import axios, { AxiosResponse } from "axios";
 import { API_KEY } from "../secrets";
-import { RecipeResponse } from "../types";
+import { RecipeResponse } from "../types/RecipeResponse";
 
 @Component
 export default class NavBar extends Vue {
@@ -124,7 +124,10 @@ export default class NavBar extends Vue {
   popular(): void {
     const requestParams = {
       sort: "popularity",
-      apiKey: API_KEY
+      apiKey: API_KEY,
+      instructionsRequired: true,
+      addRecipeNutrition: true,
+      addRecipeInformation: true,
     }
 
     axios
@@ -135,7 +138,7 @@ export default class NavBar extends Vue {
       .then((recipes: RecipeResponse) => {
         this.$router.push({
           name: "popular",
-          params: { recipes: JSON.stringify(recipes) }
+          params: { recipes: JSON.stringify(recipes), type: "search" }
         });
       })
       .catch((err: Error) => {
