@@ -138,7 +138,7 @@ export default class NavBar extends Vue {
       .then((recipes: RecipeResponse) => {
         this.$router.push({
           name: "popular",
-          params: { recipes: JSON.stringify(recipes), type: "search" }
+          params: { recipes: JSON.stringify(recipes), type: "popular" }
         });
       })
       .catch((err: Error) => {

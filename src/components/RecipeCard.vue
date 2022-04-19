@@ -102,7 +102,7 @@ export default class RecipeCard extends Vue {
   nutritionChart: Chart | undefined;
 
   mounted() {
-    if (this.type === "search") {
+    if (this.type === "search" || this.type === "popular") {
       // Random query does not provide info to create these graphs
       const labels: Array<string> = [];
       const amounts: Array<number> = [];
@@ -208,7 +208,7 @@ export default class RecipeCard extends Vue {
 
   parseIngredients(recipe: Recipe) {
     let returnString = "";
-    if (this.type === "search") {
+    if (this.type === "search" || this.type === "popular") {
       const nutrition = recipe.nutrition;
       for (let ingredient of nutrition.ingredients) {
         returnString += `- ${(
