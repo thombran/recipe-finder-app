@@ -10,6 +10,7 @@
           <v-icon :color="liked ? 'pink' : 'grey'" class="like icon">mdi-heart</v-icon>
           <v-btn  class="like" @click="addLike">Like</v-btn>
       </v-container>
+      <v-divider id="divider"/>
       <v-card-text> {{ review.ReviewText }} </v-card-text>
     </v-card>
   </v-container>
@@ -56,5 +57,8 @@ export default class ReviewCard extends Vue {
 .icon {
     margin-left: 8px;
     margin-top: 7px;
+}
+#divider {
+    margin-top: -2%;
 }
 </style>
