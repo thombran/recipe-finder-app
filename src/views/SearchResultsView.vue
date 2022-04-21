@@ -4,7 +4,6 @@
     <v-container id="container">
       <v-row>
         <v-col
-          cols="12"
           v-for="(recipe, pos) in recipesJSON.recipes"
           :key="pos"
         >

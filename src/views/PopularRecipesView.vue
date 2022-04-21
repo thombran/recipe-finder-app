@@ -4,7 +4,6 @@
     <v-container id="resultsArea">
       <v-row>
         <v-col
-          cols="12"
           v-for="(recipe, pos) in recipesJSON.recipes"
           :key="pos"
         >
@@ -58,13 +57,12 @@ export default class PopularReceipesView extends Vue {
   min-height: 100vh;
   color: black;
 }
-#filterArea, #filterBtn {
-  margin-top: 5%;
+#resultsArea {
+  margin-top: 2%;
 }
 h1 {
-  position: absolute;
-  top: 0.2%;
-  left: 15%;
+  margin-top: 2%;
+  margin-left: 15%;
   color: white;
 }
 </style>
