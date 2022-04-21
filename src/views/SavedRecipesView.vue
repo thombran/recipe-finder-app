@@ -68,7 +68,7 @@ export default class SavedRecipesView extends Vue {
   color: black;
 }
 #container {
-  margin-top: 5%;
+  margin-top: 8%;
 }
 h1 {
   position: absolute;

@@ -80,7 +80,7 @@ import { InstructionSet } from "../types/RecipeResponse";
 import { Auth, getAuth } from "firebase/auth";
 import { db } from "../main";
 import { DocumentReference, doc, setDoc, deleteDoc } from "firebase/firestore";
-import { Chart, ChartConfiguration, ChartItem, registerables } from "chart.js";
+import { Chart, ChartItem, registerables } from "chart.js";
 
 import { Recipe } from "../types";
 
@@ -314,7 +314,7 @@ export default class RecipeCard extends Vue {
     return "rgba(" + r + "," + g + "," + b + ", 0.5)";
   }
 
-  poolColors(a: any) {
+  poolColors(a: number) {
     var pool = [];
     for (let i = 0; i < a; i++) {
       pool.push(this.dynamicColors());

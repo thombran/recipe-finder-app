@@ -6,6 +6,8 @@ import LandingView from "../views/LandingView.vue";
 import SearchResultsView from "../views/SearchResultsView.vue";
 import SavedRecipesView from "../views/SavedRecipesView.vue";
 import CompletedRecipesView from "../views/CompletedRecipesView.vue";
+import WriteReviewView from "../views/WriteReviewView.vue";
+import ReadReviewsView from "../views/ReadReviewsView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import PopularRecipesView from "../views/PopularRecipesView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -54,6 +56,16 @@ const routes: Array<RouteConfig> = [
     name: "popular",
     component: PopularRecipesView,
     props: true
+  },
+  {
+    path: "/writeReview",
+    name: "writeAReview",
+    component: WriteReviewView
+  },
+  {
+    path: "/readReviews",
+    name: "readReviews",
+    component: ReadReviewsView
   },
 ];
 
