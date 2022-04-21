@@ -122,7 +122,6 @@ export default class RecipeCard extends Vue {
             data: amounts,
             hoverOffset: 2,
             backgroundColor: this.poolColors(labels.length), // Assign random colors
-            borderColor: this.poolColors(labels.length),
             borderWidth: 1,
           },
         ],
