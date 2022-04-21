@@ -51,7 +51,7 @@
             <v-list-item-title>Read Reviews</v-list-item-title>
           </v-list-item>
         </v-list-group>
-        <v-list-item link>
+        <v-list-item link @click="popular">
           <v-list-item-icon>
             <v-icon>mdi-exclamation-thick</v-icon>
           </v-list-item-icon>
@@ -96,8 +96,8 @@ export default class NavBar extends Vue {
     onAuthStateChanged(this.auth, (user: User | null) => {
       if (user) {
         this.userPhotoURL =
-          user.photoURL ??
-          "https://bodhicounseling.com/wp-content/uploads/2018/05/blank-profile-picture-973460_960_720-300x300.png";
+          `${user.photoURL ??
+          "https://bodhicounseling.com/wp-content/uploads/2018/05/blank-profile-picture-973460_960_720-300x300.png"}`;
         this.userName = `${user.displayName ?? "No Name"}`;
         this.userEmail = `${user.email ?? "No Email"}`;
       }
@@ -125,6 +125,10 @@ export default class NavBar extends Vue {
 
   completed(): void {
     this.$router.push({ path: "/completedRecipes" });
+  }
+
+  popular(): void {
+    this.$router.push({ path: "/popularFilter" });
   }
 
   writeReview(): void {
