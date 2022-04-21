@@ -1,6 +1,6 @@
 <template>
   <div class="flex-no-wrap justify-space-between">
-    <v-card class="recipe mx-auto" max-width="100vw" fluid id="card" dark>
+    <v-card class="recipe mx-auto" max-width="50vw" fluid id="card" dark>
       <v-card-title id="title">{{ this.recipeInfo.title }}</v-card-title>
       <v-card-subtitle
         >Ready In: {{ this.recipeInfo.readyInMinutes }} minutes</v-card-subtitle
@@ -102,7 +102,7 @@ export default class RecipeCard extends Vue {
   nutritionChart: Chart | undefined;
 
   mounted() {
-    if (this.type === "search" || this.type === "popular") {
+    if (this.type === "search") {
       // Random query does not provide info to create these graphs
       const labels: Array<string> = [];
       const amounts: Array<number> = [];
@@ -327,8 +327,5 @@ export default class RecipeCard extends Vue {
 <style scoped>
 #bottomSub {
   margin-top: -30px;
-}
-#title {
-  white-space: nowrap;
 }
 </style>

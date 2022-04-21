@@ -4,7 +4,6 @@
     <v-container id="container">
       <v-row>
         <v-col
-          cols="12"
           v-for="(recipe, pos) in recipesJSON.recipes"
           :key="pos"
         >
@@ -68,11 +67,11 @@ export default class CompletedRecipesView extends Vue {
   color: black;
 }
 #container {
-  margin-top: 5%;
+  margin-top: 75px;
 }
 h1 {
   position: absolute;
-  top: 2%;
+  top: 25px;
   left: 15%;
   color: white;
 }

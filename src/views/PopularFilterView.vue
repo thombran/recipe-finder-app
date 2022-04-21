@@ -118,6 +118,11 @@ export default class PopularFilterView extends Vue {
       })
       .then((response: AxiosResponse) => response.data)
       .then((recipes: RecipeResponse) => {
+        recipes.results.forEach((recipe, index) => {
+          if (recipe.analyzedInstructions.length == 0) {
+            recipes.results.splice(index, 1);
+          }
+        });
         this.$router.replace({
           name: "popular",
           params: { recipes: JSON.stringify(recipes), type: "popular" }

@@ -4,11 +4,10 @@
     <v-container id="container">
       <v-row>
         <v-col
-          cols="12"
           v-for="(recipe, pos) in recipesJSON.recipes"
           :key="pos"
         >
-          <RecipeCard id="cards" :recipeInfo="recipe" :type="recipe.type" :save="false" />
+          <RecipeCard id="cards" :recipeInfo="recipe" :type="recipe.type" :save="false" :isCompleted="recipe.isCompleted" />
         </v-col>
       </v-row>
     </v-container>
@@ -68,11 +67,11 @@ export default class SavedRecipesView extends Vue {
   color: black;
 }
 #container {
-  margin-top: 8%;
+  margin-top: 75px;
 }
 h1 {
   position: absolute;
-  top: 2%;
+  top: 25px;
   left: 15%;
   color: white;
 }
