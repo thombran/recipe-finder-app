@@ -47,28 +47,11 @@
           <v-list-item link @click="writeReview">
             <v-list-item-title>Write a Review</v-list-item-title>
           </v-list-item>
-          <v-list-item link @click="popular">
-            <v-list-item-icon>
-              <v-icon>mdi-exclamation-thick</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Popular</v-list-item-title>
-          </v-list-item>
-          <v-list-item link>
-            <v-list-item-icon>
-              <v-icon>mdi-food</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Meal Prep</v-list-item-title>
-          </v-list-item>
-          <v-list-item link @click="search">
-            <v-list-item-icon>
-              <v-icon>mdi-magnify</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Search</v-list-item-title>
           <v-list-item link @click="readReviews">
             <v-list-item-title>Read Reviews</v-list-item-title>
           </v-list-item>
         </v-list-group>
-        <v-list-item link>
+        <v-list-item link @click="popular">
           <v-list-item-icon>
             <v-icon>mdi-exclamation-thick</v-icon>
           </v-list-item-icon>
@@ -100,9 +83,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Auth, getAuth, User, onAuthStateChanged } from "firebase/auth";
-import axios, { AxiosResponse } from "axios";
-import { API_KEY } from "../secrets";
-import { RecipeResponse } from "../types/RecipeResponse";
 
 @Component
 export default class NavBar extends Vue {
@@ -116,8 +96,8 @@ export default class NavBar extends Vue {
     onAuthStateChanged(this.auth, (user: User | null) => {
       if (user) {
         this.userPhotoURL =
-          user.photoURL ??
-          "https://bodhicounseling.com/wp-content/uploads/2018/05/blank-profile-picture-973460_960_720-300x300.png";
+          `${user.photoURL ??
+          "https://bodhicounseling.com/wp-content/uploads/2018/05/blank-profile-picture-973460_960_720-300x300.png"}`;
         this.userName = `${user.displayName ?? "No Name"}`;
         this.userEmail = `${user.email ?? "No Email"}`;
       }
@@ -148,30 +128,9 @@ export default class NavBar extends Vue {
   }
 
   popular(): void {
-    const requestParams = {
-      sort: "popularity",
-      apiKey: API_KEY,
-      instructionsRequired: true,
-      addRecipeNutrition: true,
-      addRecipeInformation: true,
-    }
-
-    axios
-      .get("https://api.spoonacular.com/recipes/complexSearch", {
-        params: requestParams
-      })
-      .then((response: AxiosResponse) => response.data)
-      .then((recipes: RecipeResponse) => {
-        this.$router.push({
-          name: "popular",
-          params: { recipes: JSON.stringify(recipes), type: "popular" }
-        });
-      })
-      .catch((err: Error) => {
-        console.log(err.message);
-      });
+    this.$router.push({ path: "/popularFilter" });
   }
-  
+
   writeReview(): void {
     this.$router.push({ path: "/writeReview" });
   }
