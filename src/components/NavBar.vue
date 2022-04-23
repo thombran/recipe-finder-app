@@ -57,12 +57,6 @@
           </v-list-item-icon>
           <v-list-item-title>Popular</v-list-item-title>
         </v-list-item>
-        <v-list-item link>
-          <v-list-item-icon>
-            <v-icon>mdi-food</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Meal Prep</v-list-item-title>
-        </v-list-item>
         <v-list-item link @click="search">
           <v-list-item-icon>
             <v-icon>mdi-magnify</v-icon>

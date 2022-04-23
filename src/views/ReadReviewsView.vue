@@ -14,6 +14,8 @@ import {
   collection,
   getDocs,
   CollectionReference,
+  onSnapshot,
+  QuerySnapshot,
 } from "firebase/firestore";
 import { db } from "../main";
 import NavBar from "../components/NavBar.vue";
@@ -30,11 +32,13 @@ export default class ReadReviewsView extends Vue {
 
     beforeMount() {
         const reviewColl: CollectionReference = collection(db, "Reviews");
-        getDocs(reviewColl).then((snapshot) => {
-            snapshot.forEach((review) => {
-                const currReview: Review = review.data() as Review;
-                this.reviews.push(currReview);
-            });
+        onSnapshot(reviewColl, (change: QuerySnapshot) => {
+          for (let reviewChange of change.docChanges()) {
+            if (reviewChange.type === "added") {
+              const newDoc = reviewChange.doc.data();
+              this.$set(this.reviews, this.reviews.length, newDoc);
+            }
+          }
         });
     }
   
