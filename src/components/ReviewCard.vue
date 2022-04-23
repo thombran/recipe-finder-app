@@ -2,6 +2,9 @@
   <v-container>
     <v-card>
       <v-img :src="review.ReviewImg"></v-img>
+      <v-btn block outlined color="red" v-if="currUser" @click="deleteReview"
+        >Delete Review</v-btn
+      >
       <v-card-title> {{ review.ReviewTitle }} </v-card-title>
       <v-card-subtitle>
         {{ review.User_Name ? review.User_Name : "Anonymous" }}
@@ -27,13 +30,20 @@ import {
   updateDoc,
   increment,
   onSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "@/main";
+import { Auth, getAuth, onAuthStateChanged, User } from "firebase/auth";
 
 @Component
 export default class ReviewCard extends Vue {
   @Prop()
   readonly review: Review | undefined;
+
+  @Prop()
+  readonly currUser: boolean | undefined;
+
+  auth: Auth | undefined;
 
   liked = false;
   docID = "";
@@ -46,8 +56,8 @@ export default class ReviewCard extends Vue {
     this.reviewRef = thisDoc;
     this.likes = this.review!.Likes;
 
-    const likeChange = onSnapshot(thisDoc, (doc) => {
-      this.likes = doc.data()!.Likes;
+    const likeChange = onSnapshot(thisDoc, (docChange) => {
+        this.likes = docChange.data()!.Likes;
     });
   }
 
@@ -59,6 +69,26 @@ export default class ReviewCard extends Vue {
       this.liked = true;
       updateDoc(this.reviewRef!, { Likes: increment(1) });
     }
+  }
+
+  deleteReview(): void {
+    this.auth = getAuth();
+    onAuthStateChanged(this.auth, async (user: User | null) => {
+      if (user) {
+        const uid = user.uid;
+        const docID = uid.toString() + this.review?.RecipeId;
+        const userReview: DocumentReference = doc(db, "Reviews", docID);
+        deleteDoc(userReview)
+          .then(() => {
+            this.$destroy();
+            this.$el.parentNode!.removeChild(this.$el);
+            window.alert("Successfully deleted your review");
+          })
+          .catch((err: Error) => {
+            window.alert(err.message);
+          });
+      }
+    });
   }
 }
 </script>

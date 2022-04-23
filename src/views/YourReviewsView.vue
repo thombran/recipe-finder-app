@@ -5,6 +5,7 @@
       v-for="(review, pos) in reviews"
       :key="pos"
       :review="review"
+      :currUser="true"
       class="review"
     />
     <NavBar />

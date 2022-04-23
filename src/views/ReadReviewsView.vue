@@ -45,6 +45,10 @@ export default class ReadReviewsView extends Vue {
             return b.Likes - a.Likes;
           });
         }
+        if (reviewChange.type === "removed") {
+          const deleteDoc = reviewChange.doc.data();
+          this.reviews.splice(this.reviews.indexOf(deleteDoc as Review), 1);
+        }
       }
     });
   }
