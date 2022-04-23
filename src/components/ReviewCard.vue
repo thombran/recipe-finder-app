@@ -56,7 +56,7 @@ export default class ReviewCard extends Vue {
     this.reviewRef = thisDoc;
     this.likes = this.review!.Likes;
 
-    const likeChange = onSnapshot(thisDoc, (docChange) => {
+    onSnapshot(thisDoc, (docChange) => {
         this.likes = docChange.data()!.Likes;
     });
   }
