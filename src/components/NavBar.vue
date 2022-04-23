@@ -50,6 +50,9 @@
           <v-list-item link @click="readReviews">
             <v-list-item-title>Read Reviews</v-list-item-title>
           </v-list-item>
+          <v-list-item link @click="yourReviews">
+            <v-list-item-title>Your Reviews</v-list-item-title>
+          </v-list-item>
         </v-list-group>
         <v-list-item link @click="popular">
           <v-list-item-icon>
@@ -131,6 +134,10 @@ export default class NavBar extends Vue {
 
   readReviews(): void {
     this.$router.push({ path: "/readReviews" });
+  }
+
+  yourReviews(): void {
+    this.$router.push({ path: "yourReviews" });
   }
 }
 </script>

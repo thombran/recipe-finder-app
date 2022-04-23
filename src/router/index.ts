@@ -11,6 +11,7 @@ import ReadReviewsView from "../views/ReadReviewsView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import PopularRecipesView from "../views/PopularRecipesView.vue";
 import PopularFilterView from "../views/PopularFilterView.vue";
+import YourReviewsView from "../views/YourReviewsView.vue"; 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 Vue.use(VueRouter);
@@ -72,6 +73,11 @@ const routes: Array<RouteConfig> = [
     name: "readReviews",
     component: ReadReviewsView
   },
+  {
+    path: "/yourReviews",
+    name: "yourReviews",
+    component: YourReviewsView
+  }
 ];
 
 const router = new VueRouter({

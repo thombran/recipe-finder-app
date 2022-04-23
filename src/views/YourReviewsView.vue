@@ -18,36 +18,44 @@ import { Component, Vue } from "vue-property-decorator";
 import {
   collection,
   CollectionReference,
-  onSnapshot,
+  getDocs,
+  query,
+  QueryDocumentSnapshot,
   QuerySnapshot,
+  where,
 } from "firebase/firestore";
 import { db } from "../main";
 import NavBar from "../components/NavBar.vue";
 import ReviewCard from "../components/ReviewCard.vue";
+import { Auth, getAuth, onAuthStateChanged, User } from "firebase/auth";
 
 @Component({
   components: {
     NavBar,
-    ReviewCard,
+    ReviewCard
   },
 })
-export default class ReadReviewsView extends Vue {
-  reviews: Array<Review> = [];
+export default class YourReviewsView extends Vue {
+    reviews: Array<Review> = [];
 
-  beforeMount() {
-    const reviewColl: CollectionReference = collection(db, "Reviews");
-    onSnapshot(reviewColl, (change: QuerySnapshot) => {
-      for (let reviewChange of change.docChanges()) {
-        if (reviewChange.type === "added") {
-          const newDoc = reviewChange.doc.data();
-          this.$set(this.reviews, this.reviews.length, newDoc);
-          this.reviews.sort((a: Review, b: Review) => {
-            return b.Likes - a.Likes;
-          });
+    auth: Auth | null = null;
+
+    beforeMount() {
+        this.auth = getAuth();
+        onAuthStateChanged(this.auth, async (user: User | null) => {
+            if (user) {
+            const uid = user.uid;
+            const reviewColl: CollectionReference = collection(db, "Reviews");
+
+            const qry = query(reviewColl, where("User", "==", uid));
+            getDocs(qry).then((queryRes: QuerySnapshot) => {
+                queryRes.docs.forEach((doc: QueryDocumentSnapshot) => {
+                    this.reviews.push(doc.data() as Review);
+                });
+            });
         }
-      }
-    });
-  }
+        });  
+    }
 }
 </script>
 
