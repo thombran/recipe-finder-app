@@ -235,62 +235,59 @@ export default class RecipeCard extends Vue {
   }
 
   deleteRecipe(): void {
-    const cardElement = document.querySelector("#card");
-    if (cardElement) {
-      cardElement.remove();
-      this.auth = getAuth();
-      const user = this.auth.currentUser;
-      if (user) {
-        const uid = user.uid;
-        const recipeDoc: DocumentReference = doc(
-          db,
-          "Users",
-          uid,
-          "savedRecipes",
-          this.recipeInfo!.id.toString()
-        );
-        deleteDoc(recipeDoc)
-          .then(() => {
-            window.alert(
-              `Successfully deleted recipe: ${this.recipeInfo?.title}.`
-            );
-          })
-          .catch((err: Error) => {
-            window.alert(
-              `Could not delete recipe from user data: ${err.message}`
-            );
-          });
-      }
+    this.$destroy();
+    this.$el.parentNode!.removeChild(this.$el);
+    this.auth = getAuth();
+    const user = this.auth.currentUser;
+    if (user) {
+      const uid = user.uid;
+      const recipeDoc: DocumentReference = doc(
+        db,
+        "Users",
+        uid,
+        "savedRecipes",
+        this.recipeInfo!.id.toString()
+      );
+      deleteDoc(recipeDoc)
+        .then(() => {
+          window.alert(
+            `Successfully deleted recipe: ${this.recipeInfo?.title}.`
+          );
+        })
+        .catch((err: Error) => {
+          window.alert(
+            `Could not delete recipe from user data: ${err.message}`
+          );
+        });
     }
   }
 
   removeCompleted(): void {
-    const cardElement = document.querySelector("#card");
-    if (cardElement) {
-      cardElement.remove();
-      this.auth = getAuth();
-      const user = this.auth.currentUser;
-      if (user) {
-        const uid = user.uid;
-        const recipeDoc: DocumentReference = doc(
-          db,
-          "Users",
-          uid,
-          "completedRecipes",
-          this.recipeInfo!.id.toString()
-        );
-        deleteDoc(recipeDoc)
-          .then(() => {
-            window.alert(
-              `Successfully marked recipe as incomplete: ${this.recipeInfo?.title}.`
-            );
-          })
-          .catch((err: Error) => {
-            window.alert(
-              `Could not remove recipe from completed recipe data: ${err.message}`
-            );
-          });
-      }
+    this.$destroy();
+    this.$el.parentNode!.removeChild(this.$el);
+
+    this.auth = getAuth();
+    const user = this.auth.currentUser;
+    if (user) {
+      const uid = user.uid;
+      const recipeDoc: DocumentReference = doc(
+        db,
+        "Users",
+        uid,
+        "completedRecipes",
+        this.recipeInfo!.id.toString()
+      );
+      deleteDoc(recipeDoc)
+        .then(() => {
+          window.alert(
+            `Successfully marked recipe as incomplete: ${this.recipeInfo?.title}.`
+          );
+        })
+        .catch((err: Error) => {
+          window.alert(
+            `Could not remove recipe from completed recipe data: ${err.message}`
+          );
+        });
     }
   }
 
