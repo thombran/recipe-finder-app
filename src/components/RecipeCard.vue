@@ -60,7 +60,7 @@
             {{ this.parseEquipment(this.recipeInfo.analyzedInstructions) }}
           </v-expansion-panel-content>
         </v-expansion-panel>
-        <v-expansion-panel v-if="type === 'search'">
+        <v-expansion-panel v-if="type === 'search' || type === 'popular'">
           <v-expansion-panel-header
             >Nutrition Breakdown</v-expansion-panel-header
           >
@@ -102,7 +102,7 @@ export default class RecipeCard extends Vue {
   nutritionChart: Chart | undefined;
 
   mounted() {
-    if (this.type === "search") {
+    if (this.type === "search" || this.type === "popular") {
       // Random query does not provide info to create these graphs
       const labels: Array<string> = [];
       const amounts: Array<number> = [];
