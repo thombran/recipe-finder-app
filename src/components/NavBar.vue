@@ -90,7 +90,7 @@ export default class NavBar extends Vue {
 
   mounted(): void {
     this.auth = getAuth();
-    onAuthStateChanged(this.auth, (user: User | null) => {
+    onAuthStateChanged(this.auth, (user: User | null) => { // Load in user profile info to nav bar
       if (user) {
         this.userPhotoURL =
           `${user.photoURL ??
@@ -105,7 +105,7 @@ export default class NavBar extends Vue {
     this.$router.replace({ path: "/home" });
   }
 
-  async logout(): Promise<void> {
+  async logout(): Promise<void> { // Logout and return to login screen
     this.auth = getAuth();
     await this.auth.signOut().then(() => {
       this.$router.replace({ path: "/login" });

@@ -41,7 +41,7 @@ export default class ReviewCard extends Vue {
   readonly review: Review | undefined;
 
   @Prop()
-  readonly currUser: boolean | undefined;
+  readonly currUser: boolean | undefined; // Determines if currently logged in user "owns" this review
 
   auth: Auth | undefined;
 
@@ -57,11 +57,11 @@ export default class ReviewCard extends Vue {
     this.likes = this.review!.Likes;
 
     onSnapshot(thisDoc, (docChange) => {
-        this.likes = docChange.data()!.Likes;
+        this.likes = docChange.data()!.Likes; // Listen for changes in review likes from DB
     });
   }
 
-  addLike(): void {
+  addLike(): void { // Automatically increment/decrement database likes of this review when btn clicked
     if (this.liked) {
       this.liked = false;
       updateDoc(this.reviewRef!, { Likes: increment(-1) });
@@ -81,7 +81,7 @@ export default class ReviewCard extends Vue {
         deleteDoc(userReview)
           .then(() => {
             this.$destroy();
-            this.$el.parentNode!.removeChild(this.$el);
+            this.$el.parentNode!.removeChild(this.$el); // Remove from DOM
             window.alert("Successfully deleted your review");
           })
           .catch((err: Error) => {

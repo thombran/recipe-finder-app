@@ -110,7 +110,7 @@ export default class WriteReviewView extends Vue {
     if (!file) {
       return;
     }
-    file = await imageConversion.compressAccurately(file, 500);
+    file = await imageConversion.compressAccurately(file, 500); // Compress blob data down to specific size before uploading
     this.createImage(file);
   }
 
@@ -124,7 +124,7 @@ export default class WriteReviewView extends Vue {
         );
         const docName = user.uid.toString() + selectedRecipe?.id;
         const reviewDoc: DocumentReference = doc(db, "Reviews", docName);
-        if (!this.usrImage) {
+        if (!this.usrImage) { // If user didn't upload their own image, retrieve it from Spoonacular DB
           // Ger recipe image if user did not provide one
           const url = `https://api.spoonacular.com/recipes/${
             selectedRecipe!.id

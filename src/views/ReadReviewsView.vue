@@ -38,14 +38,14 @@ export default class ReadReviewsView extends Vue {
     const reviewColl: CollectionReference = collection(db, "Reviews");
     onSnapshot(reviewColl, (change: QuerySnapshot) => {
       for (let reviewChange of change.docChanges()) {
-        if (reviewChange.type === "added") {
+        if (reviewChange.type === "added") { // If DB collection has new item added, add to current page
           const newDoc = reviewChange.doc.data();
           this.$set(this.reviews, this.reviews.length, newDoc);
-          this.reviews.sort((a: Review, b: Review) => {
+          this.reviews.sort((a: Review, b: Review) => { // Sort by most popular first -> descending
             return b.Likes - a.Likes;
           });
         }
-        if (reviewChange.type === "removed") {
+        if (reviewChange.type === "removed") { // Remove review from page if another user deletes their review
           const deleteDoc = reviewChange.doc.data();
           this.reviews.splice(this.reviews.indexOf(deleteDoc as Review), 1);
         }

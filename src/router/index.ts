@@ -87,7 +87,7 @@ const router = new VueRouter({
 });
 
 
-router.beforeEach((to, _, next) => {
+router.beforeEach((to, _, next) => { // Route guard to prevent users from reaching page manually typing in URI
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (to.name !== "signup" && to.name !== "login" && !user) {

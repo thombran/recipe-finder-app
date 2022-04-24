@@ -131,7 +131,7 @@ export default class LandingView extends Vue {
         : {}),
       ...(this.search.diet ? { diet: this.search.diet } : {}),
       ...(this.search.meal ? { type: this.search.meal } : {}),
-      instructionsRequired: true,
+      instructionsRequired: true, // Add in additional information needed to create the recipe cards
       addRecipeNutrition: true,
       addRecipeInformation: true,
       apiKey: API_KEY,

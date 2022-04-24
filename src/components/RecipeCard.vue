@@ -90,13 +90,13 @@ export default class RecipeCard extends Vue {
   readonly recipeInfo: Recipe | undefined;
 
   @Prop()
-  readonly type: string | undefined;
+  readonly type: string | undefined; // Response object has different properties depending on search type
 
   @Prop()
-  readonly save: boolean | undefined;
+  readonly save: boolean | undefined; // Whether the user has saved this recipe
 
   @Prop()
-  readonly isCompleted: boolean | undefined;
+  readonly isCompleted: boolean | undefined; // Whether the recipe has been marked as completed by the user
 
   auth: Auth | null = null;
   nutritionChart: Chart | undefined;
@@ -107,8 +107,7 @@ export default class RecipeCard extends Vue {
       const labels: Array<string> = [];
       const amounts: Array<number> = [];
       this.recipeInfo?.nutrition.nutrients.forEach((ingredient) => {
-        if (ingredient.name !== "Calories" && ingredient.unit !== "IU") {
-          // Remove the first entry and the random vitamins measured in IU
+        if (ingredient.name !== "Calories" && ingredient.unit !== "IU") { // Irrelevant ingredients in list that should be discarded
           labels.push(ingredient.name);
           amounts.push(this.convertUnits(ingredient.unit, ingredient.amount)!);
         }
@@ -137,14 +136,14 @@ export default class RecipeCard extends Vue {
         chartStatus.destroy(); // Necessary to create new chart objects using this method
       }
 
-      this.nutritionChart = new Chart(ctx, {
+      this.nutritionChart = new Chart(ctx, { // Creating the dropdown chart of nutrition info in the UI
         type: "doughnut",
         data: data,
         options: {
           plugins: {
             tooltip: {
               callbacks: {
-                label: (item: any) => `${item.label}: ${item.parsed} g`,
+                label: (item: any) => `${item.label}: ${item.parsed} g`, // Update the doughnut chart sections to display units
               },
             },
           },
@@ -158,7 +157,7 @@ export default class RecipeCard extends Vue {
     const user = this.auth.currentUser;
     if (user) {
       const uid = user.uid;
-      const completedRecipeDocument: DocumentReference = doc(
+      const completedRecipeDocument: DocumentReference = doc( // Add completed recipe to user collection
         db,
         "Users",
         uid,
@@ -166,7 +165,7 @@ export default class RecipeCard extends Vue {
         this.recipeInfo!.id.toString()
       );
       setDoc(completedRecipeDocument, {
-        type: this.type,
+        type: this.type, // Save the type for when it is loaded on the "saved" page of the site
         ...this.recipeInfo,
       }).then(() => {
         window.alert("Added recipe to completed list");
@@ -195,6 +194,9 @@ export default class RecipeCard extends Vue {
     }
   }
 
+/**
+ * Helper method to return a paragraph string of instructions to be used in the UI dropdown
+ */
   parseInstructions(instructions: Array<InstructionSet>) {
     let returnString = "";
     for (let i = 0; i < instructions[0].steps.length; i++) {
@@ -205,6 +207,9 @@ export default class RecipeCard extends Vue {
     return returnString;
   }
 
+/**
+ * Helper method to return the list of ingredients in a list format
+ */
   parseIngredients(recipe: Recipe) {
     let returnString = "";
     if (this.type === "search" || this.type === "popular") {
@@ -223,6 +228,9 @@ export default class RecipeCard extends Vue {
     return returnString;
   }
 
+/**
+ * Helper function to return the list of equipment needed for the recipe
+ */
   parseEquipment(instructions: Array<InstructionSet>) {
     let returnString = "";
     for (let i = 0; i < instructions[0].steps.length; i++) {
@@ -236,7 +244,7 @@ export default class RecipeCard extends Vue {
 
   deleteRecipe(): void {
     this.$destroy();
-    this.$el.parentNode!.removeChild(this.$el);
+    this.$el.parentNode!.removeChild(this.$el); // Remove recipe card element from the DOM
     this.auth = getAuth();
     const user = this.auth.currentUser;
     if (user) {
@@ -291,6 +299,9 @@ export default class RecipeCard extends Vue {
     }
   }
 
+/**
+ * Not all of the ingredients are listed in grams as returned from the API - so convert all ingredients to grams
+ */
   convertUnits(unit: string, amount: number) {
     if (unit === "g") {
       return amount;
@@ -303,6 +314,9 @@ export default class RecipeCard extends Vue {
     }
   }
 
+/**
+ * Helper function to create random colors for the chart component
+ */
   dynamicColors() {
     var r = Math.floor(Math.random() * 255);
     var g = Math.floor(Math.random() * 255);
@@ -310,6 +324,9 @@ export default class RecipeCard extends Vue {
     return "rgba(" + r + "," + g + "," + b + ", 0.5)";
   }
 
+/**
+ * Create groups/arrays of colors to be used in the chart
+ */
   poolColors(a: number) {
     var pool = [];
     for (let i = 0; i < a; i++) {
